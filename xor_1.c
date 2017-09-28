@@ -28,11 +28,11 @@ void work (int *input, neuron *hidden, neuron output)
 
 neuron* neuron_init(neuron tab[])
 {
-	tab[0].weight[0] = rand()%100;
-	tab[0].weight[1] = rand()%100;
-	tab[0].size = 2;
-	tab[1].weight[0] = rand()%100;
-	tab[1].weight[1] = rand()%100;
-	tab[1].size = 2;
+	for (int i = 0; i < 2; ++i)
+	{
+		tab[i].weight[0] = rand()%100;
+		tab[i].weight[1] = rand()%100;
+		tab[i].size = 2;
+	}
 	return tab;	
 }
