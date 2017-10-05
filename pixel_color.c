@@ -84,12 +84,12 @@ void Set_pixel_black_white(SDL_Surface *surface)
    SDL_GetRGB(pixel, *surface->format, &r, &g, &b);
    if(r > 128)
    {
-        Uint32 black = SDL_MapRGB(*surface, 255, 255, 255);
-        putpixel(*surface, x, y, black);
+        Uint32 white = SDL_MapRGB(*surface, 255, 255, 255);
+        putpixel(*surface, x, y, white);
    }
    else
-        Uint32 white = SDL_MapRGB(*surface, 0, 0, 0);
-	putpixel(*surface, x, y, white);
+        Uint32 black = SDL_MapRGB(*surface, 0,0, 0);
+	putpixel(*surface, x, y, black);
   }	
  }
 }
