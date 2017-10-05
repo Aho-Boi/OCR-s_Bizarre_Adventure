@@ -53,15 +53,22 @@ void putpixel(SDL_Surface *surface, unsigned x, unsigned y, Uint32 pixel)
   }
 }
 
-void Set_pixel_gray(SDL_Surface *surface, int x, int y)
+void Set_pixel_gray(SDL_Surface *surface)
 {
-	//Uint32 *pixel = (Uint32 *)surface->pixel;
-	Uint32 pixel = SDL_GetRGB(pixel, img->format, &r, &g, &b);
-	/*Uint32 pixelr = pixel[0];
-	Uint32 pixelg = pixel[1];
-	Uint32 pixelb = pixel[2];*/
-	Uint8 gray_pixel = 0.299 * r + 0.587 * g + 0.114 * b;
-	SDL_MapRGB(img->format, gray_pixel, gray_pixel, gray_pixel);
+ for(int x = 0; x < surface->w; x++)
+ {
+  for(int y = 0; y < surface->h; y++)
+  {
+   Uint32 pixel = getpixel(surface, x, y);
+   Uint8 r;
+   Uint8 g;
+   Uint8 b;
+   SDL_GetRGB(pixel, img->format, &r, &g, &b);
+   Uint8 gray_pixel = 0.299 * r + 0.587 * g + 0.114 * b;
+   Uint32 gray = SDL_MapRGB(img->format, gray_pixel, gray_pixel, gray_pixel);
+   putpixel(surface, x, y, gray);
+  }
+ }
 }
 
 void Set_pixel_black_white(SDL_Surface *surface, int x, int y)
