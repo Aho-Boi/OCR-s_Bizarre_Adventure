@@ -112,7 +112,7 @@ void putpixel(SDL_Surface *surface, unsigned x, unsigned y, Uint32 pixel)
   }
 }
 
-void Set_pixel_gray(SDL_Surface *surface)
+void set_pixel_gray(SDL_Surface *surface)
 {
  for(int x = 0; x < surface->w; x++)
  {
@@ -130,7 +130,7 @@ void Set_pixel_gray(SDL_Surface *surface)
  }
 }
 
-void Set_pixel_black_white(SDL_Surface *surface)
+void set_pixel_black_white(SDL_Surface *surface)
 {
  Uint32 black;
  Uint32 white;
@@ -155,6 +155,33 @@ void Set_pixel_black_white(SDL_Surface *surface)
 	}
   }	
  }
+}
+
+void erase_noise(SDL_Surface *surface)
+{
+ int hist[256];
+ int count = 0;
+ for(int i = 0; i < 256; i++)
+ {
+  hist[i] = 0;
+ }
+ for(int x = 0; x < surface->w; x++)
+ {
+  for(int y = 0; y < surface->h; y++)
+  {
+   hist[getpixel(surface, x, y)] += 1;
+   count += 1;
+  }
+ }
+ int mid = count / 2;
+ int bd = 1/2;
+ int ctr = bd / 2;
+ int cm = 0;
+ while(cm != mid)
+ {
+  cm = cm + hist[0];
+ }
+ set_pixel_black_white(surface);
 }
 
 int main(int argc, char *argv[])
