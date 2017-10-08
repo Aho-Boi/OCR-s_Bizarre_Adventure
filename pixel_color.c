@@ -184,6 +184,126 @@ void erase_noise(SDL_Surface *surface)
  set_pixel_black_white(surface);
 }
 
+void erase_noise_median(SDL_Surface *surface)
+{
+ for(int x = 0; x < surface->w; x++)
+ {
+  for(int y = 0; y < surface->h; y++)
+  {
+   Uint32 pixel = getpixel(surface, x, y);
+   Uint8 r;
+   Uint8 g;
+   Uint8 b;
+   SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+   int sumr = 0;
+   int sumg = 0;
+   int sumb = 0;
+   int mid = 0;
+   if(x - 1 >= 0)
+   { 
+    Uint32 pixel = getpixel(surface, x - 1, y);
+    Uint8 r1;
+    Uint8 g1;
+    Uint8 b2;
+    SDL_GetRGB(pixel, surface->format, &r1, &g1, &b1);
+    sumr += 1;
+    sumg += 1;
+    sumb += 1;
+    mid += 1;
+   }
+   if(x + 1 < surface->w)
+   { 
+    Uint32 pixel2 = getpixel(surface, x + 1, y);
+    Uint8 r2;
+    Uint8 g2;
+    Uint8 b2;
+    SDL_GetRGB(pixel, surface->format, &r2, &g2, &b2);
+    sumr += 1;
+    sumg += 1;
+    sumb += 1;
+    mid += 1;
+   }
+   if(y - 1 >= 0)
+   { 
+    Uint32 pixel = getpixel(surface, x, y - 1);
+    Uint8 r3;
+    Uint8 g3;
+    Uint8 b3;
+    SDL_GetRGB(pixel, surface->format, &r3, &g3, &b3);
+    sumr += 1;
+    sumg += 1;
+    sumb += 1;
+    mid += 1;
+   }
+   if(y + 1 < surface->h)
+   { 
+    Uint32 pixel = getpixel(surface, x, y + 1);
+    Uint8 r4;
+    Uint8 g4;
+    Uint8 b4;
+    SDL_GetRGB(pixel, surface->format, &r4, &g4, &b4);
+    sumr += 1;
+    sumg += 1;
+    sumb += 1;
+    mid += 1;
+   } 
+   if(x - 1 >= 0 && y - 1 >= 0)
+   {
+    Uint32 pixel = getpixel(surface, x - 1, y - 1);
+    Uint8 r5;
+    Uint8 g5;
+    Uint8 b5;
+    SDL_GetRGB(pixel, surface->format, &r5, &g5, &b5);
+    sumr += 1;
+    sumg += 1;
+    sumb += 1;
+    mid += 1;
+   }
+   if(x - 1 >= 0 && y + 1 < surface->h)
+   {
+    Uint32 pixel = getpixel(surface, x - 1, y + 1);
+    Uint8 r6;
+    Uint8 g6;
+    Uint8 b6;
+    SDL_GetRGB(pixel, surface->format, &r6, &g6, &b6);
+    sumr += 1;
+    sumg += 1;
+    sumb += 1;
+    mid += 1;
+   }
+   if(x + 1 < surface->w && y - 1 >= 0)
+   {
+    Uint32 pixel = getpixel(surface, x + 1, y - 1);
+    Uint8 r7;
+    Uint8 g7;
+    Uint8 b7;
+    SDL_GetRGB(pixel, surface->format, &r7, &g7, &b7);
+    sumr += 1;
+    sumg += 1;
+    sumb += 1;
+    mid += 1;
+   }
+   if(x + 1 < surface->w && y + 1 < surface->h)
+   {
+    Uint32 pixel = getpixel(surface, x + 1, y + 1);
+    Uint8 r8;
+    Uint8 g8;
+    Uint8 b8;
+    SDL_GetRGB(pixel, surface->format, &r8, &g8, &b8);
+    sumr += 1;
+    sumg += 1;
+    sumb += 1;
+    mid += 1;
+   }
+   r = sumr / mid;
+   g = sumg / mid;
+   b = sumb / mid;
+   Uint32 new_pixel = SDL_MapRGB(surface->format, r, g, b);
+   putpixel(surface, x, y, new_pixel);   
+  }
+ }
+}
+
 int main(int argc, char *argv[])
 {
 	init_sdl();
