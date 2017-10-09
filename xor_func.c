@@ -3,14 +3,6 @@
 
 typedef struct neuron neuron;
 
-struct neuron
-{
-    	float weight[2];
-    	int size;
-    	float error;
-    	float exit;
-};
-
 float activation(float value)
 {
 	return (value > 0.0) ? 1.0 : 0.0;
@@ -74,3 +66,50 @@ void weight_ajust (neuron *hidden, neuron output)
 		}
 	}
 }
+
+void freadP(char *str, int length, FILE *file)
+{
+	int i = 0;
+	
+	do
+	{
+		str[i] = fgetc(file);
+		i++;
+	} while(i < length && stri[i - 1] != 'EOF');
+	
+	str[i - 1] = 0;
+	return str;
+}
+
+void loadWeight(neuron *hidden, neuron output, char *weight)
+{
+	int length = strlen(weight);
+	for(int i = 0; i < length; ++i)
+	{
+		if(weight[i] == ' ')
+		{
+
+		}	
+	}
+}
+
+float parseWeight(int i, char *weight)
+{
+	float result = 0.0;
+	int coma = 0;
+
+	for(char i = weight; i != ' '; ++i)
+	{
+		if (i = '.')
+		{
+			coma = 1;
+		}
+		else
+		{
+			result = result * 10.0 + (*i - '0') * 1.0;
+			coma += (!coma) ? 0 : 1;
+		}
+	}
+	return result / (10 * (coma - 1));
+}
+
