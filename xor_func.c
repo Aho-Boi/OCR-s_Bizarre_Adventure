@@ -84,12 +84,16 @@ void freadP(char *str, int length, FILE *file)
 void loadWeight(neuron *hidden, neuron output, char *weight)
 {
 	int length = strlen(weight);
+	int wi = 0, ni = 0;
 	for(int i = 0; i < length; ++i)
 	{
 		if(weight[i] == ' ')
 		{
-
+			hidden[ni].weight[wi] = parseWeight(i + 1, weight);
+			wi += 1;
 		}	
+		else if (wheight[i] == '\n')
+			ni +=1;
 	}
 }
 
