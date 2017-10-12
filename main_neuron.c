@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
 {
   if (argc < 2)
     errx(1, "Choose training(1) or generalization(2)");
-  if (argv[1] == '1')
+  if (*argv[1] == '1')
   {
     float finalErr = 0.0;
     int line = 0;
@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     fwriteP(hidden, output, file);
     fclose(file);
   }
-  else if (argv[1] == '2')
+  else if (*argv[1] == '2')
   {
     //FIX ME  
   }
