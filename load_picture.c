@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include </usr/include/SDL/SDL.h>
 
 void init_sdl(void)
