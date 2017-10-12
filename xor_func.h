@@ -11,7 +11,7 @@ struct neuron
   float exit;
 };
 
-int strlen(const char *str);
+int strlenP(const char *str);
 float activation(float value);
 void work (int *input, int lines, neuron *hidden, neuron output);
 neuron* neuron_init(int length);
