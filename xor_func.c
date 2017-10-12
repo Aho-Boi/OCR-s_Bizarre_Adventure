@@ -13,6 +13,14 @@ struct neuron
   float exit;
 };
 
+int strlenP(const char *str)
+{
+  const char *s;
+ 
+  for (s = str; *s; ++s);
+  return (s - str);
+}
+
 float activation(float value)
 {
   return (value > 0.0) ? 1.0 : 0.0;
@@ -45,6 +53,7 @@ neuron* neuron_init(int length)
     tab[i].error = (rand() % 100 * 1.0) / 100.0;
     tab[i].size = _LENH_;
   }
+  
   return tab;  
 }
 
@@ -89,9 +98,7 @@ void freadP(char *str, int length, FILE *file)
     str[i] = fgetc(file);
     i++;
   } while(i < length && str[i - 1] != 'EOF');
-  
   str[i - 1] = 0;
-  return str;
 }
 
 void fwriteP(neuron *hidden, neuron output, FILE *file)
@@ -107,29 +114,7 @@ void fwriteP(neuron *hidden, neuron output, FILE *file)
   fprintf(file, " %g %g\n", output.weight[0], output.weight[1]);
 }
 
-void loadWeight(neuron *hidden, int lenH, neuron output, char *weight)
-{
-  int length = strlen(weight);
-  int wi = 0, ni = 0;
-  for(int i = 0; i < length; ++i)
-  {
-    if(weight[i] == ' ')
-    {
-      if (ni >= lenH)
-	output.weight[wi] = parseWeight(i + 1, weight);
-      else
-	hidden[ni].weight[wi] = parseWeight(i + 1, weight);
-      wi += 1;
-    }  
-    else if (weight[i] == '\n')
-    {
-      ni +=1;
-      wi = 0;
-    }
-  }
-}
-
-float parseweight(int i, char *weight)
+float parseWeight(int i, char *weight)
 {
   float result = 0.0;
   int coma = 0;
@@ -149,3 +134,24 @@ float parseweight(int i, char *weight)
   return result / (10 * (coma - 1));
 }
 
+void loadWeight(neuron *hidden, int lenH, neuron output, char *weight)
+{
+  int length = strlenP(weight);
+  int wi = 0, ni = 0;
+  for(int i = 0; i < length; ++i)
+  {
+    if(weight[i] == ' ')
+    {
+      if (ni >= lenH)
+	output.weight[wi] = parseWeight(i + 1, weight);
+      else
+	hidden[ni].weight[wi] = parseWeight(i + 1, weight);
+      wi += 1;
+    }  
+    else if (weight[i] == '\n')
+    {
+      ni +=1;
+      wi = 0;
+    }
+  }
+}

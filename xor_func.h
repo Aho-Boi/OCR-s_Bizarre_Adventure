@@ -11,6 +11,7 @@ struct neuron
   float exit;
 };
 
+int strlen(const char *str);
 float activation(float value);
 void work (int *input, int lines, neuron *hidden, neuron output);
 neuron* neuron_init(int length);
@@ -19,7 +20,7 @@ float finalError (int *input, int lines, neuron output);
 void weight_ajust (neuron *hidden, neuron output);
 void freadP(char *str, int length, FILE *file);
 void fwriteP(neuron *hidden, neuron output, FILE *file);
-float parseweight(int i, char *weight);  
+float parseWeight(int i, char *weight);  
 void loadWeight(neuron *hidden, neuron output, char *weight);
 
 #endif
