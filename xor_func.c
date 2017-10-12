@@ -44,7 +44,7 @@ void work (int *input, int lines, neuron *hidden, neuron output)
 
 neuron* neuron_init(int length)
 {
-  neuron tab[length];
+  neuron *tab = malloc(length * sizeof(neuron));
 
   for (int i = 0; i < _LENH_; ++i)
   {
@@ -63,7 +63,7 @@ void prop_error_back(neuron *hidden, neuron output)
   for(int i = 0; i < _LENH_; ++i)
   {
     fail = output.error;
-    for(int j = 0; j < _LENH_; ++j)
+    for(int j = 0; j < hidden[i].size; ++j)
       hidden[i].error += fail * hidden[i].weight[j];
     hidden[i].error *= hidden[i].exit;
   }
@@ -82,7 +82,7 @@ void weight_ajust (neuron *hidden, neuron output)
 {
   for (int i = 0; i < _LENH_; ++i)
   {
-    for(int j = 0; j < _LENH_; ++j)
+    for(int j = 0; j < hidden[i].size; ++j)
     {
       hidden[i].weight[j] = output.error * hidden[i].exit;
     }
