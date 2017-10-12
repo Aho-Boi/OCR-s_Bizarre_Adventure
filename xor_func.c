@@ -121,7 +121,7 @@ float parseWeight(int i, char *weight)
 
   for(; weight[i] != ' '; ++i)
   {
-    if (weight[i] = '.')
+    if (weight[i] == '.')
     {
       coma = 1;
     }
