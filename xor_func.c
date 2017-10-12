@@ -5,6 +5,14 @@
 
 typedef struct neuron neuron;
 
+struct neuron
+{
+  float weight[2];
+  int size;
+  float error;
+  float exit;
+};
+
 float activation(float value)
 {
   return (value > 0.0) ? 1.0 : 0.0;
@@ -45,10 +53,10 @@ void prop_error_back(neuron *hidden, neuron output)
   float fail;
   for(int i = 0; i < _LENH_; ++i)
   {
-    fail = exit.error;
+    fail = output.error;
     for(int j = 0; j < _LENH_; ++j)
       hidden[i].error += fail * hidden[i].weight[j];
-    hidden[i].error *= hidden[i].exit
+    hidden[i].error *= hidden[i].exit;
   }
 }
 
@@ -67,7 +75,7 @@ void weight_ajust (neuron *hidden, neuron output)
   {
     for(int j = 0; j < _LENH_; ++j)
     {
-      hidden[i].weight[k] = output.error * hidden[i].exit;
+      hidden[i].weight[j] = output.error * hidden[i].exit;
     }
   }
 }
@@ -80,15 +88,15 @@ void freadP(char *str, int length, FILE *file)
   {
     str[i] = fgetc(file);
     i++;
-  } while(i < length && stri[i - 1] != 'EOF');
+  } while(i < length && str[i - 1] != 'EOF');
   
   str[i - 1] = 0;
   return str;
 }
 
-void fwriteP(neuron *hidden, int lenH, neuron output, FILE *file)
+void fwriteP(neuron *hidden, neuron output, FILE *file)
 {
-  for(int i = 0; i < lenH; ++i)
+  for(int i = 0; i < _LENH_; ++i)
   {
     for(int w = 0; w < hidden[i].size; ++w)
     {
@@ -113,9 +121,11 @@ void loadWeight(neuron *hidden, int lenH, neuron output, char *weight)
 	hidden[ni].weight[wi] = parseWeight(i + 1, weight);
       wi += 1;
     }  
-    else if (wheight[i] == '\n')
+    else if (weight[i] == '\n')
+    {
       ni +=1;
       wi = 0;
+    }
   }
 }
 
