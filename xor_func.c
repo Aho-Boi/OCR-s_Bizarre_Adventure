@@ -137,15 +137,12 @@ float parseWeight(int i, char *weight)
 void loadWeight(neuron *hidden, neuron output, char *weight)
 {
   int length = strlenP(weight);
-  int wi = 0, ni = 0;
-  for(int i = 0; i < length; ++i)
+  int wi = 0, ni = 0, i = 0;
+  for(; i < length && ni < _LENH_; ++i)
   {
     if(weight[i] == ' ')
     {
-      if (ni >= _LENH_)
-	output.weight[wi] = parseWeight(i + 1, weight);
-      else
-	hidden[ni].weight[wi] = parseWeight(i + 1, weight);
+      hidden[ni].weight[wi] = parseWeight(i + 1, weight);
       wi += 1;
     }  
     else if (weight[i] == '\n')
@@ -154,4 +151,6 @@ void loadWeight(neuron *hidden, neuron output, char *weight)
       wi = 0;
     }
   }
+  for(int w = 0; w < output.size; ++w)
+    output.weight[w] = parseWeight(i + 1, weight);
 }
