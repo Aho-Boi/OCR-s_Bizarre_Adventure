@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#define _LENH_ 2
+
 typedef struct neuron neuron;
 
 float activation(float value)
@@ -8,48 +10,51 @@ float activation(float value)
   return (value > 0.0) ? 1.0 : 0.0;
 }
 
-void work (int *input, neuron *hidden, neuron output)
+void work (int *input, int lines, neuron *hidden, neuron output)
 {
-  for(int i = 0; i < 2; ++i)
+  for(int i = 0; i < _LENH_; ++i)
   {
-    hidden[i].exit = input[0] * hidden[i].weight[0] + input[1] * hidden[i].weight[1] - hidden[i].error; 
+    hidden[i].exit = 0.0;
+    for(int j = 0; j < _LENH_; ++j)
+      hidden[i].exit += input[j + 3*lines] * hidden[i].weight[j];
+    hidden[i].exit -= hidden[i].error; 
   }
 
-  for(int i = 0; i < 2; i++)
-  {
+  output.exit = 0.0;
+  for(int i = 0; i < _LENH_; ++i)
     output.exit += hidden[i].exit * output.weight[i]; 
-  }
-
   output.exit = activation(output.exit + output.error);
 }
 
-neuron* neuron_init(neuron tab[])
+neuron* neuron_init(int length)
 {
-  for (int i = 0; i < 2; ++i)
+  neuron tab[length];
+
+  for (int i = 0; i < _LENH_; ++i)
   {
-    tab[i].weight[0] = rand() % 100 * 1.0;
-    tab[i].weight[1] = rand() % 100 * 1.0;
-    tab[i].error = rand() % 100 * 1.0;
-    tab[i].size = 2;
+    for(int j = 0; j < _LENH_; ++j)
+      tab[i].weight[j] = (rand() % 100 * 1.0) / 100.0;
+    tab[i].error = (rand() % 100 * 1.0) / 100.0;
+    tab[i].size = _LENH_;
   }
   return tab;  
 }
 
-void prop_error_back(neuron *hidden, neuron output, int size_tab)
+void prop_error_back(neuron *hidden, neuron output)
 {
   float fail;
-  for(int i = 0; i < size_tab; ++i)
+  for(int i = 0; i < _LENH_; ++i)
   {
     fail = exit.error;
-    hidden[i].error += fail * hidden[i].weight[0];
-    hidden[i].error += fail * hidden[i].weight[1];
+    for(int j = 0; j < _LENH_; ++j)
+      hidden[i].error += fail * hidden[i].weight[j];
     hidden[i].error *= hidden[i].exit
   }
 }
 
-float finalError (int *input, neuron output)
+float finalError (int *input, int lines, neuron output)
 {
-  float localError = (1.0 * input[2]) - output.exit;
+  float localError = (1.0 * input[_LENH_ + lines*3]) - output.exit;
 
   output.error *= localError;
 
@@ -58,9 +63,9 @@ float finalError (int *input, neuron output)
 
 void weight_ajust (neuron *hidden, neuron output)
 {
-  for (int i = 0; i < 2; ++i)
+  for (int i = 0; i < _LENH_; ++i)
   {
-    for(int j = 0; j < 2; ++j)
+    for(int j = 0; j < _LENH_; ++j)
     {
       hidden[i].weight[k] = output.error * hidden[i].exit;
     }
