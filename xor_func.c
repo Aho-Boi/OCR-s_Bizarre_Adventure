@@ -134,15 +134,15 @@ float parseweight(int i, char *weight)
   float result = 0.0;
   int coma = 0;
 
-  for(char i = weight; i != ' '; ++i)
+  for(; weight[i] != ' '; ++i)
   {
-    if (i = '.')
+    if (weight[i] = '.')
     {
       coma = 1;
     }
     else
     {
-      result = result * 10.0 + (*i - '0') * 1.0;
+      result = result * 10.0 + (weight[i] - '0') * 1.0;
       coma += (!coma) ? 0 : 1;
     }
   }
