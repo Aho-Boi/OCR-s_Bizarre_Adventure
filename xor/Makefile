@@ -21,7 +21,7 @@ main: ${OBJ}
 
 clean:
 	rm -f ${OBJ} ${DEP}
-	rm -f main_neuron
+	rm -f main
  
 -include ${DEP}
 # END
