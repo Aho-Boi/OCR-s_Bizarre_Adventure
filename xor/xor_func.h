@@ -13,14 +13,14 @@ struct neuron
 
 int strlenP(const char *str);
 float activation(float value);
-void work (int *input, int lines, neuron *hidden, neuron output);
+void work (int *input, int lines, neuron *hidden, neuron *output);
 neuron* neuron_init(int length);
-void prop_error_back(neuron *hidden, neuron output);
-float finalError (int *input, int lines, neuron output);
-void weight_ajust (neuron *hidden, neuron output);
+void prop_error_back(neuron *hidden, neuron *output);
+float localError (int *input, neuron *hidden, int lines, neuron *output);
+void weight_ajust (int *input, int lines, neuron *hidden, neuron *output, int localError);
 void freadP(char *str, int length, FILE *file);
 void fwriteP(neuron *hidden, neuron output, FILE *file);
 float parseWeight(int i, char *weight);  
-void loadWeight(neuron *hidden, neuron output, char *weight);
+void loadWeight(neuron *hidden, neuron *output, char *weight);
 
 #endif

@@ -5,7 +5,7 @@
 # Compilers and options
 CC=gcc
 CPPFLAGS= -MMD
-CFLAGS= -Wall -Wextra -std=c99 -pedantic -O2 -Werror
+CFLAGS= -Wall -Wextra -std=c99 -pedantic -O2
 LDFLAGS=
 LDLIBS= -lm
  
