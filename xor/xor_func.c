@@ -140,15 +140,9 @@ void loadWeight(neuron *hidden, neuron *output, char *weight)
     if(weight[i] == ' ')
     {
       if (wi == hidden[ni].size)
-      {
 	hidden[ni].bias = parseWeight(i + 1, weight);
-	printf("%f\n", hidden[ni].bias);
-      }
       else
-      {
 	hidden[ni].weight[wi] = parseWeight(i + 1, weight);
-	printf("%f\n", hidden[ni].weight[wi]);
-      }
       wi += 1;
     }  
     else if (weight[i] == '\n')
@@ -163,15 +157,9 @@ void loadWeight(neuron *hidden, neuron *output, char *weight)
     if(weight[i] == ' ')
     {
       if (wi == output->size)
-      {
 	output->bias = parseWeight(i + 2, weight);
-	printf("%f\n", output->bias);
-      }
       else
-      {
 	output->weight[wi] = parseWeight(i + 1, weight);
-	printf("%f\n", output->weight[wi]);
-      }
       wi += 1;
     }
   }
