@@ -7,7 +7,7 @@
 # include <SDL/SDL_image.h>
 # include <err.h>
 
-Uint32 getpixel(SDL_Surface *surface, unsigned x, unsigned y);
-void putpixel(SDL_Surface *surface, unsigned x, unsigned y, Uint32 pixel);
+void set_pixel_gray(SDL_Surface *surface);
+void binarize_otsu(SDL_Surface *surface);
 
 # endif
