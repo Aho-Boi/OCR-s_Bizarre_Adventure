@@ -1,11 +1,12 @@
 #include <err.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
 #include "xor_func.h"
 
-#define _LENGTH_ 4
+#define _LENGTH_ 2
 
 int main(int argc, char *argv[])
 {
@@ -25,23 +26,29 @@ int main(int argc, char *argv[])
   if (*argv[1] == '1')
   {
     float localErr = 0.0;
-    int line = 0;
+    double totalErr = 0.0, save = 0.0;
+    int line = 0, count = 1;
     int input[] = {0, 0, 0,  
 		   0, 1, 1,  
 		   1, 0, 1,
 		   1, 1, 0}; 
     
-    for(int i = 0; i < 200; ++i)
+    do
     {
+      save = totalErr;
       for(int j = 0; j < 4; ++j)
       {
-	line = rand() % 4;
 	localErr = work(input, line, hidden, &output);
-	adaptWoutput(localErr, hidden, &output);
-	adaptWhidden(localErr, input, line, hidden, &output);
+	printf("%d xor %d = %f : LocalErr = %f\n", input[line*3], input[line*3 + 1], output.exit, localErr); 
+	adaptWeight(localErr, input, line, hidden, &output);
+	totalErr += localErr;
+	line++;
+	if (line == 4)
+	  line = 0;
       }
-      printf("localError : %f\n", localErr);
-    }
+      printf("Total error : %g\n", totalErr/count);
+      count += 1;
+    }while(totalErr != save || totalErr/count < 0.0);
 
     FILE *file = fopen("training", "w");
     fwriteP(hidden, output, file);
@@ -56,7 +63,7 @@ int main(int argc, char *argv[])
     fclose(file);
 
     printf("Enter the test: ");
-    int input[_LENGTH_] = {0, 0};
+    int input[3] = {0, 0, 0};
     scanf("%d %d", input, input + 1);
     work(input, 0, hidden, &output);
     printf("%f", output.exit);

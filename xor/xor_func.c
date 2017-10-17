@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <math.h>
 
-#define _LENH_ 4
+#define _LENH_ 2
 
 typedef struct neuron neuron;
 
@@ -22,9 +22,9 @@ int strlenP(const char *str)
   return (s - str);
 }
 
-float activation(float value)
+float derivate(float x)
 {
-  return (value > 0.0) ? 1.0 : 0.0;
+  return 1 - x * x;
 }
 
 float work (int *input, int lines, neuron *hidden, neuron *output)
@@ -58,7 +58,7 @@ neuron* neuron_init(int length)
   return tab;  
 }
 
-void adaptWoutput(float error, neuron *hidden, neuron *output)
+void adaptWeight(float error, int *input, int lines, neuron *hidden, neuron *output)
 {
   for(int i = 0; i < _LENH_; ++i)
   {
@@ -67,15 +67,12 @@ void adaptWoutput(float error, neuron *hidden, neuron *output)
     output->weight[i] = (output->weight[i] > 5.0) ? 5.0 : output->weight[i];
     output->weight[i] = (output->weight[i] < -5.0) ? -5.0 : output->weight[i];
   }
-}
-
-void adaptWhidden(float error, int *input, int lines, neuron *hidden, neuron *output)
-{
+  
   for(int i = 0; i < _LENH_; ++i)
   {
     for(int j = 0; j < hidden[i].size; ++j)
     {
-      float wChange = 1 - (hidden[i].exit * hidden[i].exit);
+      float wChange = derivate(hidden[i].exit);
       wChange *= output->weight[i] * error * 0.7 * input[j + lines*3];
       hidden[i].weight[j] -= wChange; 
     }
@@ -103,11 +100,11 @@ void fwriteP(neuron *hidden, neuron output, FILE *file)
     {
       fprintf(file, " %g", hidden[i].weight[w]);
     }
-    fprintf(file, "\n");
+    fprintf(file, " %g\n", hidden[i].bias);
   }
   for(int i = 0; i < _LENH_; ++i)
     fprintf(file, " %g", output.weight[i]);
-  fprintf(file, "\n");
+  fprintf(file, " %g\n", output.bias);
 }
 
 float parseWeight(int i, char *weight)
@@ -142,8 +139,16 @@ void loadWeight(neuron *hidden, neuron *output, char *weight)
   {
     if(weight[i] == ' ')
     {
-      hidden[ni].weight[wi] = parseWeight(i + 1, weight);
-      printf("%f\n", hidden[ni].weight[wi]);
+      if (wi == hidden[ni].size)
+      {
+	hidden[ni].bias = parseWeight(i + 1, weight);
+	printf("%f\n", hidden[ni].bias);
+      }
+      else
+      {
+	hidden[ni].weight[wi] = parseWeight(i + 1, weight);
+	printf("%f\n", hidden[ni].weight[wi]);
+      }
       wi += 1;
     }  
     else if (weight[i] == '\n')
@@ -157,8 +162,16 @@ void loadWeight(neuron *hidden, neuron *output, char *weight)
   {
     if(weight[i] == ' ')
     {
-      output->weight[wi] = parseWeight(i + 1, weight);
-      printf("%f\n", output->weight[wi]);
+      if (wi == output->size)
+      {
+	output->bias = parseWeight(i + 2, weight);
+	printf("%f\n", output->bias);
+      }
+      else
+      {
+	output->weight[wi] = parseWeight(i + 1, weight);
+	printf("%f\n", output->weight[wi]);
+      }
       wi += 1;
     }
   }

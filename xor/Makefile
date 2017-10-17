@@ -20,7 +20,7 @@ main_neuron: ${OBJ}
 .PHONY: clean
 
 clean:
-	${RM} ${OBJ} ${DEP} main_neuron
+	${RM} ${OBJ} ${DEP} main_neuron training
  
 -include ${DEP}
 # END
