@@ -1,43 +1,46 @@
 #include <err.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "xor_func.h"
 
-#define _LENGTH_ 2
-#define _ERROR_FINAL_ 0.00001
+#define _LENGTH_ 4
 
 int main(int argc, char *argv[])
 {
   if (argc < 2)
     errx(1, "Choose training(1) or generalization(2)");
   
-  neuron output;
-  output.weight[0] = (rand() % 100 * 1.0) / 100.0 - 0.5;
-  output.weight[1] = (rand() % 100 * 1.0) / 100.0 - 0.5;
-  output.size = 2;
-  output.error = (rand() % 100 * 1.0) / 100.0 - 0.5;
+  srand(time(NULL));
 
-  int len = _LENGTH_;
-  neuron *hidden = neuron_init(len);
+  neuron output;
+  for(int i = 0; i < _LENGTH_; ++i)
+    output.weight[i] = (rand() % 100 * 1.0) / 100.0 - 0.5;
+  output.size = _LENGTH_;
+  output.bias = (rand() % 100 * 1.0) / 100.0 - 0.5;
+
+  neuron *hidden = neuron_init(_LENGTH_);
 
   if (*argv[1] == '1')
   {
     float localErr = 0.0;
     int line = 0;
-    int input[] = {-1, -1, -1,  
-		   -1, 1, 1,  
-		   1, -1, 1,
-		   1, 1, -1}; 
+    int input[] = {0, 0, 0,  
+		   0, 1, 1,  
+		   1, 0, 1,
+		   1, 1, 0}; 
     
-    for(int i = 0; i < 41; ++i)
+    for(int i = 0; i < 200; ++i)
     {
-      work(input, line, hidden, &output);
-      localErr = localError(input, hidden, line, &output);
+      for(int j = 0; j < 4; ++j)
+      {
+	line = rand() % 4;
+	localErr = work(input, line, hidden, &output);
+	adaptWoutput(localErr, hidden, &output);
+	adaptWhidden(localErr, input, line, hidden, &output);
+      }
       printf("localError : %f\n", localErr);
-      //prop_error_back(hidden, &output);
-      weight_ajust(input, line, hidden, &output, localErr);
-      line = rand() % 4;
     }
 
     FILE *file = fopen("training", "w");
@@ -47,8 +50,8 @@ int main(int argc, char *argv[])
   else if (*argv[1] == '2')
   {
     FILE *file = fopen("training", "r");
-    char *content = malloc(100*sizeof(char));
-    freadP(content, 100, file);
+    char *content = malloc(1000*sizeof(char));
+    freadP(content, 1000, file);
     loadWeight(hidden, &output, content);
     fclose(file);
 
