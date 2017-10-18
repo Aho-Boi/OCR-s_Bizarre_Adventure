@@ -1,6 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
-# include "load_picture.h"
+#include <SDL/SDL.h>
+#include <SDL_image.h>
+
+#include "load_picture.h"
 
 
 static inline
