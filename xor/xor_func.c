@@ -76,7 +76,7 @@ void adaptWeight(float error, int *input, int lines, neuron *hidden, neuron *out
       wChange *= output->weight[i] * error * 0.7 * input[j + lines*3];
       hidden[i].weight[j] -= wChange; 
     }
-    hidden[i].bias -= (1 - (hidden[i].exit * hidden[i].exit)) * output->weight[i] * error *0.7;
+    hidden[i].bias -= derivate(hidden[i].exit) * output->weight[i] * error *0.7;
   }
 }
 
