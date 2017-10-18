@@ -57,6 +57,8 @@ SDL_Surface* display_image(SDL_Surface *img)
 
 int main(int argc, char *argv[])
 {
+ if(argc != 2)
+  printf("Error: wrong number of args");
  init_sdl();
  SDL_Surface* image = load_image(argv[1]);
  set_pixel_gray(image);

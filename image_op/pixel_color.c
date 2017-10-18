@@ -1,7 +1,8 @@
 # include "pixel_color.h"
-# include "load_picture.h"
 # include "SDL/SDL.h"
 # include "SDL_image.h"
+# include <stdlib.h>
+# include "load_picture.h"
 
 void set_pixel_gray(SDL_Surface *surface)
 {
@@ -77,6 +78,4 @@ void binarize_otsu(SDL_Surface *surface)
   }
  }
 }
-
-
 
