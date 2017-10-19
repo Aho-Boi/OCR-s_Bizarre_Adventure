@@ -3,7 +3,7 @@
 # include <SDL/SDL.h>
 # include <SDL/SDL_image.h>
 # include "pixel_color.h"
-
+# include "image_operations.h"
 
 void wait_for_keypressed(void)
 {
@@ -57,13 +57,15 @@ SDL_Surface* display_image(SDL_Surface *img)
 
 int main(int argc, char *argv[])
 {
- if(argc != 2)
-  printf("Error: wrong number of args");
- init_sdl();
- SDL_Surface* image = load_image(argv[1]);
- set_pixel_gray(image);
- display_image(image);
- binarize_otsu(image);
- display_image(image);
- return 0;
+  if(argc != 2)
+    printf("Error: wrong number of args");
+  init_sdl();
+  SDL_Surface* image = load_image(argv[1]);
+  set_pixel_gray(image);
+  display_image(image);
+  binarize_otsu(image);
+  display_image(image);
+  Tree T = surface_to_tree(image);
+  y_cut(T, 1);
+  return 0;
 }
