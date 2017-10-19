@@ -9,9 +9,7 @@
 
 typedef struct _Tree
 {
-  Uint32   *key;
-  size_t   key_lines;
-  size_t   key_cols;
+  SDL_Surface   *key;
   struct Tree *left;
   struct Tree *right;
 }Tree;

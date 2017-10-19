@@ -16,7 +16,7 @@ all: main
 main: ${OBJ}
  
 clean:
-	${RM} ${OBJ} ${DEP} main
+	      ${RM} ${OBJ} ${DEP} main
  
 -include ${DEP}
  
