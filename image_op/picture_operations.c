@@ -1,8 +1,8 @@
-# include "image_operations.h"
+# include "picture_operations.h"
 # include "load_picture.h"
 # include <sdtlib.h>
 # include <SDL/SDL.h>
-# include <SDL/SDL_image.h>
+# include <SDL_image.h>
 
 
 Tree surface_to_tree(SDL_Surface *surface)
@@ -24,8 +24,8 @@ Tree surface_to_tree(SDL_Surface *surface)
 
 Tree  y_cut(Tree node, int level)
 {
-  if(level == 4)
-    return null;
+  if(level == 3)
+    return NULL;
   else
   {
     int c = 0;
@@ -66,7 +66,7 @@ Tree  y_cut(Tree node, int level)
         {
           upper[i * y + j] = pixel_matrix[i * y + j];
         }
-           }
+      }
       for(size_t j = 0; j < (cols - y); j++)
       {
         for(size_t i = 0; i < lines; i++)
@@ -91,8 +91,8 @@ Tree  y_cut(Tree node, int level)
 
 Tree x_cut(Tree node, int level)
 {
-  if(level == 4)
-    return null;
+  if(level == 3)
+    return NULL;
   else
   {
     int c = 0;
@@ -134,7 +134,7 @@ Tree x_cut(Tree node, int level)
           left[ i * cols + j] = pixel_matrix[i * cols + j];
         }
       }
-      for(size_t i = 0; i < (lines - x); i++)
+      for(size_t i = 0; i < (linecompilateur cs - x); i++)
       {
         for(size_t j = 0; j < cols; j++)
         {
@@ -169,7 +169,7 @@ void print_matrix(Uint32 mat[], size_t lines, size_t cols)
 
 void display_cut(Tree node)
 {
-  if(node != null)
+  if(node != NULL)
   {
     print_matrix(node->key, node->key_lines, node->key_cols);
     display_cut(node->left);

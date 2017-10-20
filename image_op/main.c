@@ -3,7 +3,7 @@
 # include <SDL/SDL.h>
 # include <SDL/SDL_image.h>
 # include "pixel_color.h"
-# include "image_operations.h"
+# include "picture_operations.h"
 
 void wait_for_keypressed(void)
 {
@@ -67,5 +67,6 @@ int main(int argc, char *argv[])
   display_image(image);
   Tree T = surface_to_tree(image);
   y_cut(T, 1);
+  display_cut(T);
   return 0;
 }
