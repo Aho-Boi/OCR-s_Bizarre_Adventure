@@ -7,18 +7,19 @@
 # include "load_picture.h"
 
 
-typedef struct Tree
+typedef struct _Tree
 {
+  int valid;
   size_t   key_lines;
   size_t   key_cols;
   Uint32   *key;
-  struct Tree *left;
-  struct Tree *right;
+  struct _Tree *left;
+  struct _Tree *right;
 }Tree;
 
 Tree surface_to_tree(SDL_Surface *surface);
-Tree y_cut(Tree node, int level);
-Tree x_cut(Tree node, int level);
-void display_cut(Tree node);
+Tree y_cut(Tree *node, int level);
+Tree x_cut(Tree *node, int level);
+void display_cut(Tree *node);
 
 #endif

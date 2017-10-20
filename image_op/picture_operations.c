@@ -16,6 +16,7 @@ Tree surface_to_tree(SDL_Surface *surface)
     }
   }
   Tree node;
+  node.valid = 1;
   node.key = pixel_matrix;
   node.key_lines = surface->h;
   node.key_cols = surface->w;
@@ -27,11 +28,12 @@ void addNode(Tree **tree, Uint32 key[], size_t lines, size_t cols, int lor)
     Tree *tmpNode;
     Tree *tmpTree = *tree;
     Tree *node = malloc(sizeof(node));
-    node.key = key;
-    node.key_lines = lines;
-    node.key_cols = cols;
-    node.left = NULL;
-    node.right = NULL;
+    node->valid = 1;
+    node->key = key;
+    node->key_lines = lines;
+    node->key_cols = cols;
+    node->left = NULL;
+    node->right = NULL;
 
     if(tmpTree)
     {
@@ -53,20 +55,21 @@ void addNode(Tree **tree, Uint32 key[], size_t lines, size_t cols, int lor)
     }
 }
 
-Tree y_cut(Tree node, int level)
+Tree y_cut(Tree *node, int level)
 {
   if(level == 3)
   {
-    Tree *nodev = NULL;
+    Tree nodev;
+    nodev.valid = 0;
     return nodev;
   }
   else
   {
     int c = 0;
     size_t cut;
-    size_t lines = node.key_lines;
-    size_t cols = node.key_cols;
-    Uint32 pixel_matrix[lines * cols] = node.key;
+    size_t lines = node->key_lines;
+    size_t cols = node->key_cols;
+    Uint32 pixel_matrix[lines * cols] = node->key;
     int white_lines = 0 ;
     size_t count_pixel = 0;
     int mid = lines/ 2;
@@ -112,29 +115,30 @@ Tree y_cut(Tree node, int level)
           down[i * (cols - cut)  + j] = pixel_matrix[i * (cols - cut) + j];
         }
       }
-      addNode(node, upper, lines, cut, 0);
-      addNode(node, down, lines, cols - cut, 1);
-      x_cut(node.left, 1);
-      y_cut(node.right, 1);
+      addNode(&node, upper, lines, cut, 0);
+      addNode(&node, down, lines, cols - cut, 1);
+      x_cut(node->left, 1);
+      y_cut(node->right, 1);
     }
     return x_cut(node, level + 1);
   }
 }
 
-Tree x_cut(Tree node, int level)
+Tree x_cut(Tree *node, int level)
 {
   if(level == 3)
   {
-    Tree *nodev = NULL;
+    Tree nodev;
+    nodev.valid = 0;
     return nodev;
   }
   else
   {
     int c = 0;
     size_t cut;
-    size_t lines = node.key_lines;
-    size_t cols = node.key_cols;
-    Uint32 pixel_matrix[lines * cols] = node.key;
+    size_t lines = node->key_lines;
+    size_t cols = node->key_cols;
+    Uint32 pixel_matrix[lines * cols] = node->key;
     int white_space = 0 ;
     size_t count_pixel = 0;
     int mid = cols/2;
@@ -180,10 +184,10 @@ Tree x_cut(Tree node, int level)
           right[i * cols  + j] = pixel_matrix[i * cols + j];
         }
       }
-      addNode(node, left, cut, cols, 0);
-      addNode(node, right, lines - cut, cols, 1);
-      y_cut(node.left, 1);
-      x_cut(noder.right, 1);
+      addNode(&node, left, cut, cols, 0);
+      addNode(&node, right, lines - cut, cols, 1);
+      y_cut(node->left, 1);
+      x_cut(node->right, 1);
     }
     return y_cut(node, level + 1);
   }
@@ -201,15 +205,15 @@ void print_matrix(Uint32 mat[], size_t lines, size_t cols)
  }
 }
 
-void display_cut(Tree node)
+void display_cut(Tree *node)
 {
-  if(node)
+  if(node->valid)
   {
-    if(!node.left && !node.right)
+    if(!node->left && !node->right)
     {
-      print_matrix(node.key, node.key_lines, node.key_cols);
+      print_matrix(node->key, node->key_lines, node->key_cols);
     }
-    display_cut(node.left);
-    display_cut(node.right);
+    display_cut(node->left);
+    display_cut(node->right);
   } 
 }
