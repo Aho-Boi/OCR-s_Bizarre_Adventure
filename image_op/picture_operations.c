@@ -69,7 +69,14 @@ Tree y_cut(Tree *node, int level)
     size_t cut;
     size_t lines = node->key_lines;
     size_t cols = node->key_cols;
-    Uint32 pixel_matrix[lines * cols] = node->key;
+    Uint32 pixel_matrix[lines * cols];
+    for(size_t i = 0; i < lines; i++)
+    {
+      for(size_t j = 0; j < cols; j++)
+      {
+        pixel_matrix[i * cols + j] = node->key[i * cols + j];
+      }
+    }
     int white_lines = 0 ;
     size_t count_pixel = 0;
     int mid = lines/ 2;
@@ -138,7 +145,14 @@ Tree x_cut(Tree *node, int level)
     size_t cut;
     size_t lines = node->key_lines;
     size_t cols = node->key_cols;
-    Uint32 pixel_matrix[lines * cols] = node->key;
+    Uint32 pixel_matrix[lines * cols];
+    for(size_t i = 0; i < lines; i++)
+    {
+      for(size_t j = 0; j < cols; j++)
+      {
+        pixel_matrix[i * cols + j] = node->key[i * cols + j];
+      }
+    }
     int white_space = 0 ;
     size_t count_pixel = 0;
     int mid = cols/2;
