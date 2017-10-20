@@ -2,17 +2,7 @@
 #include <stdio.h>
 #include <math.h>
 
-#define _LENH_ 2
-
-typedef struct neuron neuron;
-
-struct neuron
-{
-  float weight[_LENH_];
-  int size;
-  float bias;
-  float exit;
-};
+#include "xor_func.h"
 
 int strlenP(const char *str)
 {

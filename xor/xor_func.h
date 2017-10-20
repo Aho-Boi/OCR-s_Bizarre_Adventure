@@ -1,13 +1,13 @@
 #ifndef _XOR_FUNC_
 #define _XOR_FUNC_
 
-#define _LENGTH_ 2
+#define _LENH_ 2
 
 typedef struct neuron neuron;
 
 struct neuron
 {
-  float weight[_LENGTH_];
+  float weight[_LENH_];
   int size;
   float bias;
   float exit;

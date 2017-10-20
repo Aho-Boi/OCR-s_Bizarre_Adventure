@@ -6,7 +6,7 @@
 
 #include "xor_func.h"
 
-#define _LENGTH_ 2
+#define _LENH_ 2
 
 int main(int argc, char *argv[])
 {
@@ -16,12 +16,12 @@ int main(int argc, char *argv[])
   srand(time(NULL));
 
   neuron output;
-  for(int i = 0; i < _LENGTH_; ++i)
+  for(int i = 0; i < _LENH_; ++i)
     output.weight[i] = (rand() % 100 * 1.0) / 100.0 - 0.5;
-  output.size = _LENGTH_;
+  output.size = _LENH_;
   output.bias = (rand() % 100 * 1.0) / 100.0 - 0.5;
 
-  neuron *hidden = neuron_init(_LENGTH_);
+  neuron *hidden = neuron_init(_LENH_);
 
   if (*argv[1] == '1')
   {
@@ -69,5 +69,10 @@ int main(int argc, char *argv[])
     printf("%f", output.exit);
   }
   else
-    errx(1, "Argument invalide");
+  {
+    free(hidden);
+    errx(1, "Invalid argument");
+  }
+
+  free(hidden);
 }
