@@ -3,13 +3,13 @@
 CC=gcc
 
 CPPFLAGS= `pkg-config --cflags sdl` -MMD
-CFLAGS= -Wall -Wextra -Werror -std=c99 -O3
+CFLAGS= -Wall -Wextra -std=c99 -O3
 LDFLAGS=
 LDLIBS= `pkg-config --libs sdl` -lSDL_image
 
 
-SRC= 
-OBJ= *.o
+SRC=	  
+OBJ= picture_operations.o load_picture.o pixel_color.o main.o
 DEP= ${SRC:.o=.d}
 
 all: main

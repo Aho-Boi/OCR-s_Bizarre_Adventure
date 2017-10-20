@@ -7,11 +7,11 @@
 # include "load_picture.h"
 
 
-typedef struct _Tree
+typedef struct Tree
 {
-  Uint32   *key;
   size_t   key_lines;
   size_t   key_cols;
+  Uint32   *key;
   struct Tree *left;
   struct Tree *right;
 }Tree;
