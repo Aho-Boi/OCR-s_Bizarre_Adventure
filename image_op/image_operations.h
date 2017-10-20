@@ -9,12 +9,14 @@
 
 typedef struct _Tree
 {
-  SDL_Surface   *key;
+  Uint32   *key;
+  size_t   key_lines;
+  size_t   key_cols;
   struct Tree *left;
   struct Tree *right;
 }Tree;
 
-Tree surface_to_tree(SDL_Surface *surface);  
+Tree surface_to_tree(SDL_Surface *surface);
 Tree y_cut(Tree node, int level);
 Tree x_cut(Tree node, int level);
 
