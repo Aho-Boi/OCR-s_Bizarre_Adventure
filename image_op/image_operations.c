@@ -25,7 +25,7 @@ Tree surface_to_tree(SDL_Surface *surface)
 Tree  y_cut(Tree node, int level)
 {
   if(level == 4)
-    return;
+    return null;
   else
   {
     int c = 0;
@@ -35,7 +35,7 @@ Tree  y_cut(Tree node, int level)
     size_t cut = 0;
     int white_lines = 0 ;
     int count_pixel = 0;
-    size_t mid = lines/ 4
+    int mid = lines/ 2;
     for(size_t y = 0; y < cols; y++)
     {
      for(size_t x = 0 ; x < lines; x++)
@@ -92,7 +92,7 @@ Tree  y_cut(Tree node, int level)
 Tree x_cut(Tree node, int level)
 {
   if(level == 4)
-    return;
+    return null;
   else
   {
     int c = 0;
@@ -102,7 +102,7 @@ Tree x_cut(Tree node, int level)
     size_t cut = 0;
     int white_space = 0 ;
     int count_pixel = 0;
-    size_t mid = cols/8;
+    int mid = cols/2;
     for(size_t x = 0; x < lines; x++)
     {
       for(size_t y = 0 ; y < cols; y++)
@@ -155,4 +155,24 @@ Tree x_cut(Tree node, int level)
   }
 }
 
+void print_matrix(Uint32 mat[], size_t lines, size_t cols)
+{
+ for(size_t i = 0; i < lines; i++)
+ {
+  for(size_t j = 0; j < cols; j++)
+  {
+   printf("%4g", mat[j + i * cols]);
+  }
+  printf("\n");
+ }
+}
 
+void display_cut(Tree node)
+{
+  if(node != null)
+  {
+    print_matrix(node->key, node->key_lines, node->key_cols);
+    display_cut(node->left);
+    display_cut(node->right);
+  } 
+}
