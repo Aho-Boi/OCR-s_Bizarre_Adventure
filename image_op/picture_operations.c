@@ -57,11 +57,9 @@ void addNode(Tree **tree, Uint32 key[], size_t lines, size_t cols, int lor)
 
 Tree y_cut(Tree *node, int level)
 {
-  if(level == 3 || !node->valid)
+  if(level == 3)
   {
-    Tree nodev;
-    nodev.valid = 0;
-    return nodev;
+    return *node;
   }
   else
   {
@@ -133,11 +131,9 @@ Tree y_cut(Tree *node, int level)
 
 Tree x_cut(Tree *node, int level)
 {
-  if(level == 3 || !node->valid)
+  if(level == 3)
   {
-    Tree nodev;
-    nodev.valid = 0;
-    return nodev;
+    return *node;
   }
   else
   {
@@ -222,8 +218,11 @@ void print_matrix(Uint32 mat[], size_t lines, size_t cols)
 void display_cut(Tree *node)
 {
   if(node->valid)
-  {   
-    print_matrix(node->key, node->key_lines, node->key_cols);
+  { 
+    if(!node->left && !node->right)
+    {  
+      print_matrix(node->key, node->key_lines, node->key_cols);
+    }
     display_cut(node->left);
     display_cut(node->right);
   } 
