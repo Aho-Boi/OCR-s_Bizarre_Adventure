@@ -24,8 +24,8 @@ void set_pixel_gray(SDL_Surface *surface)
 
 void binarize_otsu(SDL_Surface *surface)
 {
- int hist[256];
- int total = 0;
+ double hist[256];
+ double total = 0;
  for(int x = 0; x < surface->w; x++)
  {
   for(int y = 0; y < surface->h; y++)
@@ -44,16 +44,16 @@ void binarize_otsu(SDL_Surface *surface)
  }
  int w1 = 0, w2 = 0;
  for(int i = 0; i < 128; i++)
- 	w1 += hist[i]/total;
+ 	w1 += hist[i] / total;
  for(int i = 128; i < 256;  i++)
- 	w2 += hist[i]/total;
- int m1 = 0;	
- int m2 = 0;
+ 	w2 += hist[i] / total;
+ double m1 = 0;	
+ double m2 = 0;
  for(int i = 0; i < 128; i ++)
  	m1 = (hist[i] * (hist[i]/total)) / w1;		
  for(int i = 128; i < 256; i ++)
  	m2 = (hist[i] * (hist[i]/total)) / w2;
- int sig1 = 0, sig2 = 0;		
+ double sig1 = 0, sig2 = 0;		
  for(int i = 128; i < 256; i ++)
  	sig2 = (((hist[i] - m2) * (hist[i]/total)) * ((hist[i] - m2) * (hist[i]/total))) / w2;	
  for(int i = 0; i < 128; i ++)
