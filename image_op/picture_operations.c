@@ -220,10 +220,10 @@ void display_cut(Tree *node)
   if(node->valid)
   { 
     if(!node->left && !node->right)
-    {  
       print_matrix(node->key, node->key_lines, node->key_cols);
-    }
-    display_cut(node->left);
-    display_cut(node->right);
+    if(node->left)
+      display_cut(node->left);
+    if(node->right)
+      display_cut(node->right);
   } 
 }
