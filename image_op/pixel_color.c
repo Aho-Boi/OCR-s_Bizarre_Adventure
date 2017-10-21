@@ -69,12 +69,22 @@ void binarize_otsu(SDL_Surface *surface)
    Uint8 b;
    Uint32 bin_value;
    SDL_GetRGB(pixel, surface->format, &r, &g, &b);
-   if(r > sig)
-    bin_value  = SDL_MapRGB(surface->format, 255, 255, 255);
+   if(sig > 32 && sig < 224)
+   {
+     if(r > sig)
+      bin_value  = SDL_MapRGB(surface->format, 255, 255, 255);
+     else
+      bin_value = SDL_MapRGB(surface->format, 0, 0, 0);
+     putpixel(surface, x, y, bin_value);
+   }
    else
-    bin_value = SDL_MapRGB(surface->format, 0, 0, 0);
-   putpixel(surface, x, y, bin_value);
-
+   {
+     if(r > 128)
+       bin_value  = SDL_MapRGB(surface->format, 255, 255, 255);
+     else
+       bin_value = SDL_MapRGB(surface->format, 0, 0, 0);
+     putpixel(surface, x, y, bin_value);
+   }
   }
  }
 }
