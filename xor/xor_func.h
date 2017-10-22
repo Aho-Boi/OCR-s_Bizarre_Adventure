@@ -17,7 +17,7 @@ int strlenP(const char *str);
 float derivate(float x);
 float work (int *input, int lines, neuron *hidden, neuron *output);
 neuron* neuron_init(int length);
-void adaptWeight(float error, int *input, int lines, neuron *hidden, neuron *output);
+void adaptWeight(float e,int *input, int lines, neuron *hidden, neuron *output);
 void freadP(char *str, int length, FILE *file);
 void fwriteP(neuron *hidden, neuron output, FILE *file);
 float parseWeight(int i, char *weight);  

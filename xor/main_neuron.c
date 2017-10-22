@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 {
   if (argc < 2)
     errx(1, "Choose training(1) or generalization(2)");
-  
+
   srand(time(NULL));
 
   neuron output;
@@ -23,23 +23,26 @@ int main(int argc, char *argv[])
 
   neuron *hidden = neuron_init(_LENH_);
 
+  // training
   if (*argv[1] == '1')
   {
     float localErr = 0.0;
     double totalErr = 0.0, save = 0.0;
     int line = 0, count = 1;
-    int input[] = {0, 0, 0,  
-		   0, 1, 1,  
+    int input[] = {0, 0, 0,
+		   0, 1, 1,
 		   1, 0, 1,
-		   1, 1, 0}; 
-    
+		   1, 1, 0};
+
     do
     {
       save = totalErr;
       for(int j = 0; j < 4; ++j)
       {
 	localErr = work(input, line, hidden, &output);
-	printf("%d xor %d = %f : LocalErr = %f\n", input[line*3], input[line*3 + 1], output.exit, localErr); 
+	int i1 =input[line*3], i2 = input[line*3 + 1];
+	float oe = output.exit;
+	printf("%d xor %d = %f : LocalErr = %f\n", i1, i2, oe, localErr);
 	adaptWeight(localErr, input, line, hidden, &output);
 	totalErr += localErr;
 	line++;
@@ -54,6 +57,7 @@ int main(int argc, char *argv[])
     fwriteP(hidden, output, file);
     fclose(file);
   }
+  // generalization
   else if (*argv[1] == '2')
   {
     FILE *file = fopen("training", "r");
