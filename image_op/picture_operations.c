@@ -39,17 +39,17 @@ void addNode(Tree **tree, Uint32 key[], size_t lines, size_t cols, int lor)
     {
       while(tmpTree)
       {
-         if(lor == 1) 
-         {
+        if(lor == 1)
+        {
           tmpNode->right = node;
-         }
-        if(lor == 0) 
-        { 
+        }
+        if(lor == 0)
+        {
           tmpNode->left = node;
         }
       }
     }
-    else 
+    else
     {
      *tree = node;
     }
@@ -218,12 +218,12 @@ void print_matrix(Uint32 mat[], size_t lines, size_t cols)
 void display_cut(Tree *node)
 {
   if(node->valid)
-  { 
+  {
     if(!node->left && !node->right)
       print_matrix(node->key, node->key_lines, node->key_cols);
     if(node->left)
       display_cut(node->left);
     if(node->right)
       display_cut(node->right);
-  } 
+  }
 }

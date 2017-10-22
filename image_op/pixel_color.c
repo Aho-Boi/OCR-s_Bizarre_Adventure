@@ -47,20 +47,20 @@ void binarize_otsu(SDL_Surface *surface)
  	w1 += hist[i] / total;
  for(int i = 128; i < 256;  i++)
  	w2 += hist[i] / total;
- double m1 = 0;	
+ double m1 = 0;
  double m2 = 0;
  for(int i = 0; i < 128; i ++)
- 	m1 = (hist[i] * (hist[i]/total)) / w1;		
+ 	m1 = (hist[i] * (hist[i]/total)) / w1;
  for(int i = 128; i < 256; i ++)
  	m2 = (hist[i] * (hist[i]/total)) / w2;
- double sig1 = 0, sig2 = 0;		
+ double sig1 = 0, sig2 = 0;
  for(int i = 128; i < 256; i ++)
- 	sig2 = (((hist[i] - m2) * (hist[i]/total)) * ((hist[i] - m2) * (hist[i]/total))) / w2;	
+ 	sig2 = (((hist[i] - m2) * (hist[i]/total)) * ((hist[i] - m2) * (hist[i]/total))) / w2;
  for(int i = 0; i < 128; i ++)
  	sig1 = (((hist[i] - m1) * (hist[i]/total)) * ((hist[i] - m1) * (hist[i]/total))) / w1;
  Uint8 sig = w1 * sig1 * sig1 + w2 * sig2 * sig2;
  for(int x = 0; x < surface->w; x++)
- { 
+ {
   for(int y = 0; y < surface->h; y++)
   {
    Uint32 pixel = getpixel(surface, x, y);
