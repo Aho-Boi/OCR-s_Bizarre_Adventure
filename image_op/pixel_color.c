@@ -15,8 +15,8 @@ void set_pixel_gray(SDL_Surface *surface)
    Uint8 g;
    Uint8 b;
    SDL_GetRGB(pixel, surface->format, &r, &g, &b);
-   Uint8 gray_pixel = 0.299 * r + 0.587 * g + 0.114 * b;
-   Uint32 gray = SDL_MapRGB(surface->format, gray_pixel, gray_pixel, gray_pixel);
+   Uint8 gp = 0.299 * r + 0.587 * g + 0.114 * b;
+   Uint32 gray = SDL_MapRGB(surface->format, gp, gp, gp);
    putpixel(surface, x, y, gray);
   }
  }
@@ -55,9 +55,15 @@ void binarize_otsu(SDL_Surface *surface)
  	m2 = (hist[i] * (hist[i]/total)) / w2;
  double sig1 = 0, sig2 = 0;
  for(int i = 128; i < 256; i ++)
- 	sig2 = (((hist[i] - m2) * (hist[i]/total)) * ((hist[i] - m2) * (hist[i]/total))) / w2;
+ {
+  double val = ((hist[i] - m2) * (hist[i]/total));
+ 	sig2 = (val * val) / w2;
+ }
  for(int i = 0; i < 128; i ++)
- 	sig1 = (((hist[i] - m1) * (hist[i]/total)) * ((hist[i] - m1) * (hist[i]/total))) / w1;
+ {
+  double val = ((hist[i] - m1) * (hist[i]/total));
+ 	sig1 = (val * val) / w1;
+ }
  Uint8 sig = w1 * sig1 * sig1 + w2 * sig2 * sig2;
  for(int x = 0; x < surface->w; x++)
  {

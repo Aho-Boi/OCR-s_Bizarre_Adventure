@@ -1,0 +1,19 @@
+Voici l'avancement de notre projet de s3 tel que nous l'avons avancé pour la premiere soutenance.
+
+Installation :
+
+Pour installer le réseau de neuronne xor, il faut lancer la commande make dans le dossier xor
+Pour installer la gestion d'image, il faut lancer la commande make dans le dossier image_op
+
+Utilisation:
+
+Le xor, une fois compilé, s'utilise de la facon suivante:
+  - "./main_neuron 1" -> lance le training du reseau
+  - "./main_neuron 2" -> lance la fonction de generalisation, il sera demandé de rentrer les tests spus la forme "entier1 entier2"
+
+La gestion de l'image se lance de la facon suivante:
+  - "./main argument" où argument est le chemin de l'image
+
+Désinstallation:
+
+La commande make clean marche pour la desinstallation de xor et de la gestion d'image
