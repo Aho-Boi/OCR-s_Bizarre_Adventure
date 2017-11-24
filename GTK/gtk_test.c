@@ -3,9 +3,20 @@
 
 int main(int argc, char **argv)
 {
-  GtkWidget * MainWindow = NULL;
-  MainWindow = gtk_new_window(GTK_WINDOW_TOPLEVEL);
-  gtk_init(&argc, &argv);
-  gtk_widget_show(MainWindow);
-  return EXIT_SUCCESS;
+    /* Variables */
+    GtkWidget * MainWindow = NULL;
+
+    /* Initialisation de GTK+ */
+    gtk_init(&argc, &argv);
+
+    /* Création de la fenêtre */
+    MainWindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    g_signal_connect(G_OBJECT(MainWindow), "delete-event", G_CALLBACK(gtk_main_quit), NULL);
+
+    /* Affichage et boucle évènementielle */
+    gtk_widget_show(MainWindow);
+    gtk_main();
+
+    /* On quitte.. */
+    return EXIT_SUCCESS;
 }
