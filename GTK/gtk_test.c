@@ -13,6 +13,7 @@ int main(int argc, char **argv)
     GtkWidget * button_box;
     GtkWidget * buttonStart;
     GtkWidget * buttonStop;
+    GtkWidget * onglets;
     //GtkWidget * label;
 
     /* Initialisation de GTK+ */
@@ -20,9 +21,13 @@ int main(int argc, char **argv)
 
     /* Création de la fenêtre */
     window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    g_signal_connect(G_OBJECT(window), "delete-event", G_CALLBACK(gtk_main_quit), NULL);
     gtk_window_set_title (GTK_WINDOW (window), "OCR's Bizarre Aventure");
     
+    /* Onglets */
+    onglets = gtk_notebook_new();
+    gtk_notebook_set_tab_pos(GTK_NOTEBOOK(onglets), GTK_POS_TOP);
+    gtk_notebook_set_scrollable(GTK_NOTEBOOK(onglets), FALSE);    
+
     /* Label 
     label = Label();
     label.set_markup('<span color="#c0392b" weight="bold" font="FreeSerif">Je suis rouge, en gras avec une belle police !</span>');
