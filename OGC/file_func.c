@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
+
 #include "mat_func.h"
 
 static
@@ -51,6 +52,11 @@ void mat_read(int* i, char* content, size_t size, matrix_t *mat)
 void read(matrix_t *neuron, matrix_t *output, char *cfile)
 {
   FILE *file = fopen(cfile, "r");
+  if(!file)
+  {
+    fclose(file);
+    return ;
+  }
   size_t size = fsize(file);
   char *content = malloc(sizeof(char) * size);
   fread(content, sizeof(char), size, file);

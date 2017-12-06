@@ -32,7 +32,7 @@ double final_err(int expOutput, matrix_t *output)
   return output_err;
 }
 
-void back_prop(int expOutput, matrix_t *neuron, matrix_t *output)
+double back_prop(int expOutput, matrix_t *neuron, matrix_t *output)
 {
   double err = final_err(expOutput, output), bias, d;
 
@@ -56,4 +56,6 @@ void back_prop(int expOutput, matrix_t *neuron, matrix_t *output)
     d = derivate(neuron->output[i]);
     neuron->mat[i * (neuron->height - 1)] -= d * err * 0.7;
   }
+
+  return err;
 }
