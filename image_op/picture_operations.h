@@ -12,14 +12,14 @@ typedef struct _Tree
   int valid;
   size_t   key_lines;
   size_t   key_cols;
-  Uint32   *key;
+  double   *key;
   struct _Tree *left;
   struct _Tree *right;
 }Tree;
 
 Tree surface_to_tree(SDL_Surface *surface);
-Tree y_cut(Tree *node, int level);
-Tree x_cut(Tree *node, int level);
+Tree y_cut(Tree *noe);
+Tree x_cut(Tree *node);
 void display_cut(Tree *node);
 
 #endif

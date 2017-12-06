@@ -16,7 +16,7 @@ void set_pixel_gray(SDL_Surface *surface)
    Uint8 b;
    SDL_GetRGB(pixel, surface->format, &r, &g, &b);
    Uint8 gp = 0.299 * r + 0.587 * g + 0.114 * b;
-   Uint32 gray = SDL_MapRGB(surface->format, gp, gp, );
+   Uint32 gray = SDL_MapRGB(surface->format, gp, gp, gp);
    putpixel(surface, x, y, gray);
   }
  }
