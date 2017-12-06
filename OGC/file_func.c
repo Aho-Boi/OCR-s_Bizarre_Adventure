@@ -1,5 +1,8 @@
-#include<stdio.h>
-#include<stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 #include "mat_func.h"
 
@@ -9,47 +12,47 @@ void mat_write(matrix_t *mat, FILE *file)
   fseek(file, 0, SEEK_END);
   for(int i = 0; i < mat->height; ++i)
   {
-    for(int j = 0; j < mat->witdh; ++j)
+    for(int j = 0; j < mat->width; ++j)
       fprintf(file, " %8g", mat->mat[i * mat->width + j]);
     fprintf(file, "\n");
   }
   fprintf(file, "LOLI!!!\n");
 }
 
-void write(matrix_t *neuron, matrix_t *output, char *cfile)
+void my_write(matrix_t *neuron, matrix_t *output, char *cfile)
 {
   FILE *file = fopen(cfile, "w");
   mat_write(neuron, file);
   mat_write(output, file);
-  fclose(file;)
+  fclose(file);
 }
 
 static
-char* read_word(int* i, char* content, size_t size)
+char* read_word(size_t* i, char* content, size_t size)
 {
   char *res = calloc(sizeof(char), 9);
 
-  for(int j = 0; i < size && content[i] != ' ' && content[i] != '\n'; ++i, ++j)
-    res[j] += content[i];
-  i++;
+  for(int j = 0; *i < size && content[*i] != ' ' && content[*i] != '\n'; ++i, ++j)
+    res[j] += content[*i];
+  (*i)++;
 
   return res;
 }
 
 static
-void mat_read(int* i, char* content, size_t size, matrix_t *mat)
+void mat_read(size_t* i, char* content, size_t size, matrix_t *mat)
 {
-  char *word = read_word(&i, content, size);
-  double m = mat->mat;
+  char *word = read_word(i, content, size);
+  double *m = mat->mat;
   do 
   {
     *m = atof(word);
     m++;
-    word = read_word(&i, content, size);
+    word = read_word(i, content, size);
   } while(word != "LOLI!!!");
 }
 
-void read(matrix_t *neuron, matrix_t *output, char *cfile)
+void my_read(matrix_t *neuron, matrix_t *output, char *cfile)
 {
   FILE *file = fopen(cfile, "r");
   if(!file)
@@ -57,12 +60,14 @@ void read(matrix_t *neuron, matrix_t *output, char *cfile)
     fclose(file);
     return ;
   }
-  size_t size = fsize(file);
+  struct stat loli;
+  stat(cfile, &loli);
+  size_t size = loli.st_size - 1;;
   char *content = malloc(sizeof(char) * size);
   fread(content, sizeof(char), size, file);
-  fclose(file;)
+  fclose(file);
 
-  int i = 0;
+  size_t i = 0;
   mat_read(&i, content, size, neuron);
-  mat_read(&i, cotnent, size, output);
+  mat_read(&i, content, size, output);
 }

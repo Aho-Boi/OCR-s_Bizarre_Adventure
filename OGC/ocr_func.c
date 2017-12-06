@@ -22,7 +22,7 @@ double final_err(int expOutput, matrix_t *output)
 {
   double output_err = 0.0, err = 0.0;
 
-  for(int i = 0; i < output->weight; ++i)
+  for(int i = 0; i < output->width; ++i)
   {
     err = (expOutput == i) - output->output[i];
     output->mat[i * output->width] = err * derivate(output->output[i]);
@@ -39,7 +39,7 @@ double back_prop(int expOutput, matrix_t *neuron, matrix_t *output)
   for(int i = 0; i < output->width; ++i)
     for(int j = 0; j < output->height - 1; ++j)
     {
-      output->mat[i * output->height + j] -= 0.07 * e * neuron->output[i];
+      output->mat[i * output->height + j] -= 0.07 * err * neuron->output[i];
       if(output->mat[i * output->height + j] > 5.0)
         output->mat[i * output->height + j] = 5.0;
       else if(output->mat[i * output->height + j] < -5.0)

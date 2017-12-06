@@ -1,4 +1,5 @@
 #include <math.h>
+#include <stdlib.h>
 
 #include "mat_func.h"
 
@@ -8,7 +9,7 @@
 matrix_t *mat_create(int h, int w)
 {
   matrix_t *res = NULL;
-  res = malloc(sizeof(matrix_t))
+  res = malloc(sizeof(matrix_t));
   res->mat = calloc(sizeof(double), h * w);
   res->output = calloc(sizeof(double), w);
   res->height = h;
@@ -17,8 +18,7 @@ matrix_t *mat_create(int h, int w)
   return res;
 }
 
-inline
-void *mat_free(matrix_t mat)
+void mat_free(matrix_t *mat)
 {
   free(mat->mat);
   free(mat->output);
@@ -27,7 +27,7 @@ void *mat_free(matrix_t mat)
 
 matrix_t *mat_mult(matrix_t *mat1, matrix_t *mat2)
 {
-  int h = mat1->height - 1, c = mat1->witdh, w = mat2->witdh;
+  int h = mat1->height - 1, c = mat1->width, w = mat2->width;
   matrix_t *res = mat_create(h + 1, w);
 
   for(int i = 0; i < h; ++i)
@@ -49,6 +49,6 @@ void mat_rand(matrix_t *matr)
 
 void mat_tanh(matrix_t *out, matrix_t *neuron)
 {
-  for(int i = 0; i < out->witdth * out->height; ++i)
-    mat->mat[i] = tanh(mat->mat[i] + neuron->mat[i * (neuron->height - 1)])
+  for(int i = 0; i < out->width * out->height; ++i)
+    out->mat[i] = tanh(out->mat[i] + neuron->mat[i * (neuron->height - 1)]);
 }
