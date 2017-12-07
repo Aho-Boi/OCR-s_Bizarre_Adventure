@@ -62,187 +62,152 @@ void addNode(Tree **tree, double key[], size_t lines, size_t cols, int lor)
      *tree = node;
     }
 }
-/*
-size_t cut(double pix_mat[], size_t lines, size_t cols)
+
+size_t can_cut_y(double pixel_matrix[], size_t lines, size_t cols)
 {
-  //parcours puis renvoie l'endroit de la coupe
   size_t cut = 0;
-  double pixel_matrix[lines * cols];
-  for(size_t i = 0; i < lines; i++)
-  {
-    for(size_t j = 0; j < cols; j++)
-    {
-      double value = node->key[i * cols + j];
-      pixel_matrix[i * cols + j] = value;
-    }
-  }
-  int white_lines = 0 ;
-  size_t count_pixel = 0;
-  int mid = lines/(lines * cols);
+  size_t lim_count = lines * cols;
+  size_t count = 0;
+  size_t mid = lines/(lines * cols);
   for(size_t y = 0; y < cols; y++)
   {
-    for(size_t x = 0 ; x < lines; x++)
+    size_t i = y;
+    while(i < lim_count && pixel_matrix[i] == 1)
     {
-      if(pixel_matrix[x * cols + y] == 1)
-      {
-        count_pixel += 1;
-      }
+      i += cols;
     }
-    if(count_pixel == (lines - 1))
+    if(i < lim_count)
     {
-      white_lines += 1;
+      count += 1;
     }
     else
     {
-      count_pixel = 0;
+      count = 0;
     }
-    if(white_lines >= mid)
+    if(count >= mid)
     {
-      c = 1;
       cut = y;
       break;
     }
   }
-}
-*/
-Tree y_cut(Tree *node)
-{
-  int c = 0;
-  size_t cut;
-  size_t lines = node->key_lines;
-  size_t cols = node->key_cols;
-  double pixel_matrix[lines * cols];
-  for(size_t i = 0; i < lines; i++)
-  {
-    for(size_t j = 0; j < cols; j++)
-    {
-      double value = node->key[i * cols + j];
-      pixel_matrix[i * cols + j] = value;
-    }
-  }
-  int white_lines = 0 ;
-  size_t count_pixel = 0;
-  int mid = lines/8;
-  for(size_t y = 0; y < cols; y++)
-  {
-    for(size_t x = 0 ; x < lines; x++)
-    {
-      if(pixel_matrix[x * cols + y] != 0)
-      {
-        count_pixel += 1;
-      }
-    }
-    if(count_pixel == (lines - 1))
-    {
-      white_lines += 1;
-    }
-    else
-    {
-      count_pixel = 0;
-    }
-    if(white_lines >= mid)
-    {
-      c = 1;
-      cut = y;
-      break;
-    }
-  }
-  if(c == 1)
-  {
-    double upper[lines * cut];
-    double down[lines * (cols - cut)];
-    for(size_t j = 0; j < cut; j++)
-    {
-      for(size_t i = 0; i < lines; i++)
-      {
-        double value = pixel_matrix[i * cut + j];
-        upper[i * cut + j] = value;
-      }
-    }
-    for(size_t j = (cols - cut); j < cols; j++)
-    {
-      for(size_t i = 0; i < lines; i++)
-      {
-        double value = pixel_matrix[i * (cols - cut) + j];
-        down[i * (cols - cut)  + j] = value;
-      }
-    }
-    addNode(&node, upper, lines, cut, 0);
-    addNode(&node, down, lines, cols - cut, 1);
-    x_cut(node->left);
-    y_cut(node->right);
-  }
-  return *node;
+  return cut;
 }
 
-Tree x_cut(Tree *node)
+Tree y_cut(Tree *node, int level)
 {
-  int c = 0;
-  size_t cut;
-  size_t lines = node->key_lines;
-  size_t cols = node->key_cols;
-  double pixel_matrix[lines * cols];
-  for(size_t i = 0; i < lines; i++)
+  if(level == 3)
   {
-    for(size_t j = 0; j < cols; j++)
-    {
-      double value = node->key[i * cols + j];
-      pixel_matrix[i * cols + j] = value;
-    }
+    return *node;
   }
-  int white_space = 0 ;
-  size_t count_pixel = 0;
-  int mid = cols/8;
+  else
+  {
+    size_t lines = node->key_lines;
+    size_t cols = node->key_cols;
+    size_t c;
+    c = can_cut_y(node->key, lines, cols);
+    if(c != 0)
+    {
+      double upper[lines * c];
+      double down[lines * (cols - c)];
+      for(size_t j = 0; j < c; j++)
+      {
+        for(size_t i = 0; i < lines; i++)
+        {
+          double value = node->key[i * c + j];
+          upper[i * c + j] = value;
+        }
+      }
+      for(size_t j = (cols - c); j < cols; j++)
+      {
+        for(size_t i = 0; i < lines; i++)
+        {
+          double value = node->key[i * (cols - c) + j];
+          down[i * (cols - c)  + j] = value;
+        }
+      }
+        addNode(&node, upper, lines, c, 0);
+        addNode(&node, down, lines, cols - c, 1);
+        x_cut(node->left, 1);
+        y_cut(node->right, 1);
+      return *node;
+    }
+    else
+      return x_cut(node, level + 1);
+  }
+}
+
+size_t can_cut_x(double pixel_matrix[], size_t lines, size_t cols)
+{
+  size_t cut = 0;
+  size_t lim_count = lines * cols;
+  size_t count = 0;
+  size_t mid = lines/(lines * cols);
   for(size_t x = 0; x < lines; x++)
   {
-    for(size_t y = 0 ; y < cols; y++)
+    size_t i = x;
+    while(i < lim_count && pixel_matrix[i] == 1)
     {
-      if(pixel_matrix[x * cols + y] != 0)
-      {
-        count_pixel += 1;
-      }
+      i += lines;
     }
-    if(count_pixel == (lines - 1))
+    if(i < lim_count)
     {
-      white_space += 1;
+      count += 1;
     }
     else
     {
-      count_pixel = 0;
+      count = 0;
     }
-    if(white_space >= mid)
+    if(count >= mid)
     {
-      c = 1;
       cut = x;
       break;
     }
   }
-  if(c == 1)
+  return cut;
+
+}
+
+Tree x_cut(Tree *node, int level)
+{
+  if(level == 3)
   {
-    double left[cut * cols];
-    double right[(lines - cut) * cols];
-    for(size_t i = 0; i < cut; i++)
-    {
-      for(size_t j = 0; j < cols; j++)
-      {
-        double value = pixel_matrix[i * cols + j];
-        left[ i * cols + j] = value;
-      }
-    }
-    for(size_t i = (lines - cut); i < lines; i++)
-    {
-      for(size_t j = 0; j < cols; j++)
-      {
-        double value = pixel_matrix[i * cols + j];
-        right[i * cols  + j] = value;
-      }
-    }
-    addNode(&node, left, cut, cols, 0);
-    addNode(&node, right, lines - cut, cols, 1);
-    y_cut(node->left);
-    x_cut(node->right);
+    return *node;
   }
-  return *node;
+  else
+  {
+    size_t c;
+    size_t lines = node->key_lines;
+    size_t cols = node->key_cols;
+    c = can_cut_x(node->key, lines, cols);
+    if(c != 0)
+    {
+      double left[c * cols];
+      double right[(lines - c) * cols];
+      for(size_t i = 0; i < c; i++)
+      {
+        for(size_t j = 0; j < cols; j++)
+        {
+          double value = node->key[i * cols + j];
+          left[ i * cols + j] = value;
+        }
+      }
+      for(size_t i = (lines - c); i < lines; i++)
+      {
+        for(size_t j = 0; j < cols; j++)
+        {
+          double value = node->key[i * cols + j];
+          right[i * cols  + j] = value;
+        }
+      }
+      addNode(&node, left, c, cols, 0);
+      addNode(&node, right, lines - c, cols, 1);
+      y_cut(node->left, 1);
+      x_cut(node->right, 1);
+      return *node;
+    }
+    else
+      return y_cut(node, level + 1);
+  }
 }
 
 void print_matrix(double mat[], size_t lines, size_t cols)
