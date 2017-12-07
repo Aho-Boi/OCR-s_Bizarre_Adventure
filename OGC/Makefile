@@ -6,7 +6,7 @@ CFLAGS= -Wall -Wextra -std=c99 -O0 -g
 LDFLAGS=
 LDLIBS= -lm `pkg-config --libs sdl` -lSDL_image
 
-SRC= file_func.c mat_func.c ocr_func.c main_func.c main.c
+SRC= my_string.c load_picture.c file_func.c mat_func.c ocr_func.c main_func.c main.c
 OBJ= ${SRC:.c=.o}
 DEP= ${SRC:.c=.d}
  

@@ -9,6 +9,7 @@
 #include "mat_func.h"
 #include "my_string.h"
 #include "ocr_func.h"
+#include "load_picture.h"
 
 #define _NB_NEURON_ 10
 #define _NB_INPUT_ 25 	//5 * 5

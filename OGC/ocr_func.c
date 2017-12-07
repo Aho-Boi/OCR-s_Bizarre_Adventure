@@ -12,8 +12,8 @@ void work(matrix_t *input, matrix_t *neuron, matrix_t *output)
 {
   matrix_t *outNeuron = mat_mult(input, neuron);
   mat_tanh(outNeuron, neuron);
-  neuron->output = outNeuron;
-  output->output = mat_mult(outNeuron, output);
+  neuron->output = outNeuron->mat;
+  output->output = mat_mult(outNeuron, output)->mat;
   mat_free(outNeuron);
 }
 
