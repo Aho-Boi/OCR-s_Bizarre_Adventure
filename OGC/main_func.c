@@ -35,7 +35,7 @@ matrix_t** loadInput()
 
   while((actual = readdir(rep)) != NULL)
   {
-    *input + i = mat_create(5, 5);
+    *(input + i) = mat_create(5, 5);
     char* conc = my_strcon("training/", actual->d_name);
     picture_to_double(IMG_Load(conc), *input + i);
     i++;

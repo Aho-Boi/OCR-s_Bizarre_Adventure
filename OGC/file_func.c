@@ -39,17 +39,28 @@ char* read_word(size_t* i, char* content, size_t size)
   return res;
 }
 
+int cmpstring(char* a , char* b)
+{
+  int res = 0;
+  for(int i=0; a[i] == b[i] ; i++ )
+  {
+    res = 1;
+  }
+  return res;
+}
+
 static
 void mat_read(size_t* i, char* content, size_t size, matrix_t *mat)
 {
   char *word = read_word(i, content, size);
   double *m = mat->mat;
+  char *stru = "LOLI!!!";
   do 
   {
     *m = atof(word);
     m++;
     word = read_word(i, content, size);
-  } while(word != "LOLI!!!");
+  } while(cmpstring(word,stru) != 1);
 }
 
 void my_read(matrix_t *neuron, matrix_t *output, char *cfile)
