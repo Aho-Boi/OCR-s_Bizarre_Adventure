@@ -90,7 +90,8 @@ void generalization(char *file)
   matrix_t *output = mat_create(_NB_NEURON_ + 1, _NB_OUTPUT_);
   my_read(neuron, output, file);
   work(input[0]->mat, neuron, output);
-  /*Print la sortie flemme too*/
+  for(int i = 0; i < output->width; ++i)
+    printf("%g ", output->output[i]);
 
   mat_free(neuron);
   mat_free(output);
