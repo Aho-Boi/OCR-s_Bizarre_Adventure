@@ -1,4 +1,5 @@
 #include <math.h>
+#include <stdlib.h>
 
 #include "mat_func.h"
 
@@ -10,11 +11,13 @@ double derivate(double x)
 
 void work(matrix_t *input, matrix_t *neuron, matrix_t *output)
 {
-  matrix_t *outNeuron = mat_mult(input, neuron);
-  mat_tanh(outNeuron, neuron);
-  neuron->output = outNeuron->mat;
-  output->output = mat_mult(outNeuron, output)->mat;
-  mat_free(outNeuron);
+  neuron->output = mat_mult(input, neuron)->mat;
+  mat_tanh(neuron);
+  matrix_t *oN = mat_create(2, neuron->width);
+  oN->mat = neuron->output;
+  output->output = mat_mult(oN, output)->mat;
+  free(oN->output);
+  free(oN);
 }
 
 static

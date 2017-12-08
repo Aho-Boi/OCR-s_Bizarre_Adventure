@@ -11,7 +11,7 @@
 #include "ocr_func.h"
 #include "load_picture.h"
 
-#define _NB_NEURON_ 10
+#define _NB_NEURON_ 3
 #define _NB_INPUT_ 25 	//5 * 5
 #define _NB_OUTPUT_ 3
 #define _NB_TRAINING_ 3
@@ -25,20 +25,24 @@ void picture_to_double(SDL_Surface *surface, matrix_t *input)
 }
 
 static
-matrix_t** loadInput()
+input_t** loadInput(char* file)
 {
-  matrix_t **input = malloc(sizeof(matrix_t*) * _NB_TRAINING_);
+  input_t **input = malloc(sizeof(input_t*) * _NB_TRAINING_);
   int i = 0;
-  DIR *rep = opendir("./training");
+  DIR *rep = opendir(file);
   if(!rep)
     errx(1, "Could not load image training");
   struct dirent *actual;
 
   while((actual = readdir(rep)) != NULL)
   {
-    *(input + i) = mat_create(5, 5);
-    char* conc = my_strcon("training/", actual->d_name);
-    picture_to_double(IMG_Load(conc), *input + i);
+    if(actual->d_name[0] == '.')
+      continue;
+    *(input + i) = malloc(sizeof(input_t));
+    (*(input + i))->mat = mat_create(5, 5);
+    char* conc = my_strcon(file, actual->d_name);
+    picture_to_double(IMG_Load(conc), (*(input + i))->mat);
+    (*(input + i))->expOutput = atoi(actual->d_name);
     i++;
   }
   return input;
@@ -46,9 +50,12 @@ matrix_t** loadInput()
 
 void training(char* file)
 {
-  matrix_t **input = loadInput();
+  input_t **input = loadInput("trainingPicture/");
+  input_t *inp = NULL;
   matrix_t *neuron = mat_create(_NB_INPUT_ + 1, _NB_NEURON_);
   matrix_t *output = mat_create(_NB_NEURON_ + 1, _NB_OUTPUT_);
+  mat_rand(neuron);
+  mat_rand(output);
   my_read(neuron, output, file);
 
   double totalErr = 0.0, save = 0.0, localErr = 0.0;
@@ -59,9 +66,10 @@ void training(char* file)
     save = totalErr;
     for(int i = 0; i < _NB_TRAINING_; ++i)
     {
-      work(input[i], neuron, output);
-      localErr = back_prop(/*expOutput*/36, neuron, output);
-      printf("RESULTAT : LOLI FAIS LE");
+      inp = *(input + i);
+      work(inp->mat, neuron, output);
+      localErr = back_prop(inp->expOutput, neuron, output);
+      printf("RESULTAT : LOLI FAIS LE\n");
       totalErr += localErr;
     }
     printf("Total error : %g\n", totalErr/count);
@@ -77,11 +85,11 @@ void training(char* file)
 
 void generalization(char *file)
 {
-  matrix_t **input = loadInput();
+  input_t **input = loadInput("generalization/");
   matrix_t *neuron = mat_create(_NB_INPUT_ + 1, _NB_NEURON_);
   matrix_t *output = mat_create(_NB_NEURON_ + 1, _NB_OUTPUT_);
   my_read(neuron, output, file);
-  work(input[0], neuron, output);
+  work(input[0]->mat, neuron, output);
   /*Print la sortie flemme too*/
 
   mat_free(neuron);

@@ -23,3 +23,12 @@ char* my_strcon(char* s1, char* s2)
   *s = '\0';
   return tmp;
 }
+
+int my_strcmp(char* s1, char* s2)
+{
+  for(; (*s1 != '\0' || *s2 != '\0') && *s1 == *s2; ++s1, ++s2)
+    continue;
+  return (*s1 == '\0' && *s2 == '\0');
+}
+
+

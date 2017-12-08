@@ -31,8 +31,8 @@ matrix_t *mat_mult(matrix_t *mat1, matrix_t *mat2)
   matrix_t *res = mat_create(h + 1, w);
 
   for(int i = 0; i < h; ++i)
-    for(int j = 0; j < c; ++j)
-      for(int k = 0; k < w; ++k)
+    for(int j = 0; j < w; ++j)
+      for(int k = 0; k < c; ++k)
 	res->mat[i*w + j] += mat1->mat[i*c + k] * mat2->mat[k*w + j];
 
   return res;
@@ -47,8 +47,8 @@ void mat_rand(matrix_t *matr)
     matr->mat[i] = (rand() % 100 * 1.0) / 100.0 - 0.5;
 }
 
-void mat_tanh(matrix_t *out, matrix_t *neuron)
+void mat_tanh(matrix_t *neuron)
 {
-  for(int i = 0; i < out->width * out->height; ++i)
-    out->mat[i] = tanh(out->mat[i] + neuron->mat[i * (neuron->height - 1)]);
+  for(int i = 0; i < neuron->width; ++i)
+    neuron->output[i] = tanh(neuron->output[i] + neuron->mat[i * (neuron->height - 1)]);
 }

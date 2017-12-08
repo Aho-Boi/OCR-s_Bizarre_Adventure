@@ -5,6 +5,7 @@
 #include <unistd.h>
 
 #include "mat_func.h"
+#include "my_string.h"
 
 static
 void mat_write(matrix_t *mat, FILE *file)
@@ -13,10 +14,10 @@ void mat_write(matrix_t *mat, FILE *file)
   for(int i = 0; i < mat->height; ++i)
   {
     for(int j = 0; j < mat->width; ++j)
-      fprintf(file, " %8g", mat->mat[i * mat->width + j]);
+      fprintf(file, " %f", mat->mat[i * mat->width + j]);
     fprintf(file, "\n");
   }
-  fprintf(file, "LOLI!!!\n");
+  fprintf(file, " LOLI!!!\n");
 }
 
 void my_write(matrix_t *neuron, matrix_t *output, char *cfile)
@@ -30,22 +31,15 @@ void my_write(matrix_t *neuron, matrix_t *output, char *cfile)
 static
 char* read_word(size_t* i, char* content, size_t size)
 {
-  char *res = calloc(sizeof(char), 9);
+  char *res = calloc(sizeof(char), 20);
+  int j = 0;
 
-  for(int j = 0; *i < size && content[*i] != ' ' && content[*i] != '\n'; ++i, ++j)
-    res[j] += content[*i];
+  for(; *i < size && content[*i] != ' ' && content[*i] != '\n'; *i += 1, ++j)
+    res[j] = content[*i];
+  if(*i < size && content[*i] == '\n')
+    *i += 1;
   (*i)++;
-
-  return res;
-}
-
-int cmpstring(char* a , char* b)
-{
-  int res = 0;
-  for(int i=0; a[i] == b[i] ; i++ )
-  {
-    res = 1;
-  }
+  res[j + 1] = '\0';
   return res;
 }
 
@@ -59,8 +53,9 @@ void mat_read(size_t* i, char* content, size_t size, matrix_t *mat)
   {
     *m = atof(word);
     m++;
+    free(word);
     word = read_word(i, content, size);
-  } while(cmpstring(word,stru) != 1);
+  } while(!my_strcmp(word, stru));
 }
 
 void my_read(matrix_t *neuron, matrix_t *output, char *cfile)
@@ -68,7 +63,7 @@ void my_read(matrix_t *neuron, matrix_t *output, char *cfile)
   FILE *file = fopen(cfile, "r");
   if(!file)
   {
-    fclose(file);
+    //fclose(file);
     return ;
   }
   struct stat loli;
@@ -78,7 +73,7 @@ void my_read(matrix_t *neuron, matrix_t *output, char *cfile)
   fread(content, sizeof(char), size, file);
   fclose(file);
 
-  size_t i = 0;
+  size_t i = 1;
   mat_read(&i, content, size, neuron);
   mat_read(&i, content, size, output);
 }
