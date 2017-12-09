@@ -1,1 +1,11 @@
+gcc -Wall -Wextra -g gtk_OCR.c `pkg-config --cflags --libs gtk+-3.0` -rdynamic -o mainGlade
+
+
+
+gcc -rdynamic -Wall -Wextra -g gtk_OCR.c `pkg-config --cflags --libs gtk+-3.0` -o mainGlade
+
+
+gcc -Wall -Wextra -g gtk_OCR.c `pkg-config --cflags --libs gtk+-3.0` -o main
+
+
 gcc -Wall -Wextra -g gtk_test.c `pkg-config --cflags --libs gtk+-3.0` -o Main
