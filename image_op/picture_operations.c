@@ -111,25 +111,25 @@ Tree y_cut(Tree *node, int level)
     if(c != 0)
     {
       double upper[lines * c];
-      double down[lines * (cols - c)];
+      double down[(lines - c) * cols];
       for(size_t j = 0; j < c; j++)
       {
-        for(size_t i = 0; i < lines; i++)
+        for(size_t i = 0; i < cols; i++)
         {
-          double value = node->key[i * cols + j];
-          upper[i * cols + j] = value;
+          double value = node->key[j * cols + i];
+          upper[j * cols + i] = value;
         }
       }
-      for(size_t j = (cols - c); j < cols; j++)
+      for(size_t j = (lines - c); j < lines; j++)
       {
-        for(size_t i = 0; i < lines; i++)
+        for(size_t i = 0; i < cols; i++)
         {
-          double value = node->key[i * cols + j];
-          down[i * cols + j] = value;
+          double value = node->key[j * cols + i];
+          down[j * cols + i] = value;
         }
       }
         addNode(&node, upper, lines, c, 0);
-        addNode(&node, down, lines, cols - c, 1);
+        addNode(&node, down, lines - c, cols, 1);
         x_cut(node->left, 1);
         y_cut(node->right, 1);
       return *node;
@@ -187,26 +187,26 @@ Tree x_cut(Tree *node, int level)
     c = can_cut_x(node->key, lines, cols);
     if(c != 0)
     {
-      double left[c * cols];
-      double right[(lines - c) * cols];
-      for(size_t i = 0; i < c; i++)
+      double left[lines * c];
+      double right[lines * (cols - c)];
+      for(size_t i = 0; i < lines; i++)
       {
-        for(size_t j = 0; j < cols; j++)
+        for(size_t j = 0; j < c; j++)
         {
           double value = node->key[i * cols + j];
           left[i * cols + j] = value;
         }
       }
-      for(size_t i = (lines - c); i < lines; i++)
+      for(size_t i = 0; i < lines; i++)
       {
-        for(size_t j = 0; j < cols; j++)
+        for(size_t j = cols - c; j < cols; j++)
         {
           double value = node->key[i * cols + j];
           right[i * cols + j] = value;
         }
       }
-      addNode(&node, left, c, cols, 0);
-      addNode(&node, right, lines - c, cols, 1);
+      addNode(&node, left, lines, c, 0);
+      addNode(&node, right, lines, cols - c, 1);
       y_cut(node->left, 1);
       x_cut(node->right, 1);
       return *node;
@@ -313,9 +313,9 @@ void display_cut(Tree *node)
     {
       size_t line = node->key_lines;
       size_t cols = node->key_cols;
-  /*    double res[16 * 16];
-      resize(node->key, line, cols, res); */
-      print_matrix(node->key, line, cols);
+      double res[16 * 16];
+      resize(node->key, line, cols, res); 
+      print_matrix(res, 16, 16);
     }
     if(node->left)
       display_cut(node->left);
