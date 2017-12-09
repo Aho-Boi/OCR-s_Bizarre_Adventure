@@ -54,19 +54,18 @@ SDL_Surface* display_image(SDL_Surface *img)
   return screen;
 }
 
-
 int main(int argc, char *argv[])
 {
   if(argc != 2)
     printf("Error: wrong number of args");
   init_sdl();
-  SDL_Surface* image = load_image(argv[1]);
-  display_image(image);
-  set_pixel_gray(image);
-  display_image(image);
-  binarize_otsu(image);
-  display_image(image);
-  Tree T = surface_to_tree(image);
+  SDL_Surface* img = load_image(argv[1]);
+  display_image(img);
+  set_pixel_gray(img);
+  display_image(img);
+  binarize_otsu(img);
+  display_image(img);
+  Tree T = surface_to_tree(img);
   T = y_cut(&T, 1);
   display_cut(&T);
   return 0;

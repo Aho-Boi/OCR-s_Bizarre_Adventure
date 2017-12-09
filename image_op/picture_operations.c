@@ -4,22 +4,22 @@
 # include <stdlib.h>
 # include <SDL/SDL.h>
 # include <SDL_image.h>
-
+# define couleur(param) printf("\033[%sm",param)
 
 Tree surface_to_tree(SDL_Surface *surface)
 {
   double pixel_matrix[surface->h * surface->w];
-  for(int x = 0; x < surface->h; x++)
+  for(int x = 0; x < surface->w; x++)
   {
-    for(int y = 0; y < surface->w; y++)
-    {
+    for(int y = 0; y < surface->h; y++)
+    {   
       if(getpixel(surface, x, y) != 0)
       {
-        pixel_matrix[x * surface->w + y] = 1;
+        pixel_matrix[y * surface->w + x] = 1;
       }
       else
       {
-        pixel_matrix[x * surface->w + y] = 0;
+        pixel_matrix[y * surface->w + x] = 0;
       }
     }
   }
@@ -113,16 +113,16 @@ Tree y_cut(Tree *node, int level)
       {
         for(size_t i = 0; i < lines; i++)
         {
-          double value = node->key[i * c + j];
-          upper[i * c + j] = value;
+          double value = node->key[i * cols + j];
+          upper[i * cols + j] = value;
         }
       }
       for(size_t j = (cols - c); j < cols; j++)
       {
         for(size_t i = 0; i < lines; i++)
         {
-          double value = node->key[i * (cols - c) + j];
-          down[i * (cols - c)  + j] = value;
+          double value = node->key[i * cols + j];
+          down[i * cols + j] = value;
         }
       }
         addNode(&node, upper, lines, c, 0);
@@ -188,7 +188,7 @@ Tree x_cut(Tree *node, int level)
         for(size_t j = 0; j < cols; j++)
         {
           double value = node->key[i * cols + j];
-          left[ i * cols + j] = value;
+          left[i *  cols + j] = value;
         }
       }
       for(size_t i = (lines - c); i < lines; i++)
@@ -196,7 +196,7 @@ Tree x_cut(Tree *node, int level)
         for(size_t j = 0; j < cols; j++)
         {
           double value = node->key[i * cols + j];
-          right[i * cols  + j] = value;
+          right[i * cols + j] = value;
         }
       }
       addNode(&node, left, c, cols, 0);
@@ -210,13 +210,93 @@ Tree x_cut(Tree *node, int level)
   }
 }
 
+void resize(double mat[], size_t lines, size_t cols, double res[])
+{
+  if(lines < 16 && cols < 16)
+  {
+    for(size_t i = 0; i < lines; i++)
+    {
+      for(size_t j = 0; j < cols; j++)
+      {
+        res[i] = mat[i];
+      }
+    }
+    for(int i = lines; i < 16; i++)
+    {
+      for(size_t j = cols; j < 16; j++)
+      {
+        res[i] = 1;
+      }
+    }
+  }
+  else
+  {
+    if(lines > 16 || cols > 16)
+    {
+      size_t i1 = 0;
+      if(lines > 16)
+      {
+        size_t j1 = 0;
+        while(i1 < 4 && j1 < cols && mat[i1] == 1)
+        {
+          if(mat[i1] == 1)
+          {
+            i1++;
+            /*
+            j1++;
+            if(j1 >= cols)
+            {
+              j1 = 0;
+              i1++;
+            }*/
+          }
+        }
+      }
+      size_t j2 = 0;
+      if(cols > 16)
+      {
+        size_t i2 = 0;
+        while(i2 < lines && j2 < 4 && mat[j2] == 1)
+        {
+          j2++;
+          /*
+          if(mat[i2 * cols + j2] == 1)
+          {
+            i2++;
+            if(i2 >= lines)
+            {
+              i2 = 0;
+              j1++;
+            }
+          }
+          */
+        }
+      }
+      for(size_t x = 0; x < 16; x++)
+      {
+        for(size_t y = 0; j2 < 16 ; y++)
+        {
+          res[x] = mat[x + i1 + j2];
+        }
+      }
+    }      
+  }
+}
+
 void print_matrix(double mat[], size_t lines, size_t cols)
 {
   for(size_t i = 0; i < lines; i++)
   {
     for(size_t j = 0; j < cols; j++)
     {
-      printf("%f", mat[j + i * cols]);
+      if(mat[i * cols + j] == 0)
+      {
+        couleur("31");
+        printf("%f ", mat[i * cols + j]);
+        couleur("0");
+      }
+      else
+        printf("%f ", mat[i * cols + j]);
     }
     printf("\n");
   }
@@ -230,7 +310,9 @@ void display_cut(Tree *node)
     {
       size_t line = node->key_lines;
       size_t cols = node->key_cols;
-      print_matrix(node->key, line, cols);
+    /*double res[16 * 16];
+      resize(node->key, line, cols, res); */
+      print_matrix(node->key, node->key_lines, node->key_cols);
     }
     if(node->left)
       display_cut(node->left);
@@ -238,3 +320,4 @@ void display_cut(Tree *node)
       display_cut(node->right);
   } 
 }
+
