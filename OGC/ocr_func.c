@@ -18,7 +18,7 @@ void work(matrix_t *input, matrix_t *neuron, matrix_t *output)
   free(out);
 }
 
-double back_prop(matrix_t *exp, matrix_t *neuron, matrix_t *output)
+double back_prop(matrix_t *exp, matrix_t *input, matrix_t *neuron, matrix_t *output)
 {
   double out;
   int errO = output->height - 1, errN = neuron->height - 1;
@@ -33,8 +33,13 @@ double back_prop(matrix_t *exp, matrix_t *neuron, matrix_t *output)
   {
     for(int j = 0; j < output->height - 1; ++j)
     {
-      out = output->output[i];
-      output->mat[i * output->height + j] -= output->mat[errO * (i + 1)] * out;
+      out = neuron->output[j];
+      output->mat[i * output->height + j] -= 0.07 * output->mat[errO * (i + 1)] * out;
+
+      if(output->mat[i * output->height + j] > 5.0)
+	output->mat[i * output->height + j] = 5.0;
+      else if(output->mat[i * output->height + j] < -5.0)
+	output->mat[i * output->height + j] = -5.0;
     }
   }
   for(int i = 0; i < nbN; ++i) //erreur couche intermediaire
@@ -49,8 +54,13 @@ double back_prop(matrix_t *exp, matrix_t *neuron, matrix_t *output)
   {
     for(int j = 0; j < neuron->height - 1; ++j)
     {
-      out = neuron->output[i];
-      neuron->mat[i * neuron->height + j] -= neuron->mat[errN * (i + 1)] * out;
+      out = input->mat[j];
+      neuron->mat[i * neuron->height + j] -= 0.7 * neuron->mat[errN * (i + 1)] * out;
+
+      if(neuron->mat[i * neuron->height + j] > 5.0)
+	neuron->mat[i * neuron->height + j] = 5.0;
+      else if(neuron->mat[i * neuron->height + j] < -5.0)
+	neuron->mat[i * neuron->height + j] = -5.0;
     }
   }
 

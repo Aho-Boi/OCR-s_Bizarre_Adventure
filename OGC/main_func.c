@@ -31,21 +31,21 @@ void test(input_t **input)
 			0.0, 1.0, 0.0, 1.0, 0.0,
 			0.0, 1.0, 1.0, 1.0, 0.0,
 			0.0, 1.0, 0.0, 1.0, 0.0};
-  (*input)->mat->mat = mat1;
+  memmove((*input)->mat->mat, mat1, sizeof(double) * 25);
 
   double mat2[]           = {0.0, 1.0, 1.0, 1.0, 0.0,
       			      0.0, 1.0, 0.0, 1.0, 0.0,
 			      0.0, 1.0, 1.0, 1.0, 0.0,
 			      0.0, 1.0, 0.0, 1.0, 0.0,
 			      0.0, 1.0, 1.0, 1.0, 0.0};
-  (*(input + 1))->mat->mat = mat2;
+  memmove((*(input + 1))->mat->mat, mat1, sizeof(double) * 25);
 
   double mat3[]            = {0.0, 1.0, 0.0, 0.0, 0.0,
 			      0.0, 1.0, 0.0, 0.0, 0.0,
 			      0.0, 1.0, 0.0, 0.0, 0.0,
 			      0.0, 1.0, 0.0, 0.0, 0.0,
 			      0.0, 1.0, 1.0, 1.0, 0.0};
-  (*(input + 2))->mat->mat = mat3;
+  memmove((*(input + 2))->mat->mat, mat1, sizeof(double) * 25);
 }
 static
 input_t** loadInput(char* file)
@@ -106,7 +106,7 @@ void training(char* file)
     {
       inp = *(input + i);
       work(inp->mat, neuron, output);
-      localErr = back_prop(inp->expOutput, neuron, output);
+      localErr = back_prop(inp->expOutput, inp->mat, neuron, output);
       output_print(inp->exp, output);
       //printf("ERR : %f\n", localErr);
       totalErr += localErr;
@@ -114,9 +114,9 @@ void training(char* file)
     //printf("Total error : %g\n", totalErr);
     printf("%zu tours\n", count);
     count++;
-    if(!(count % 100))
+    if(!(count % 999))
       my_write(neuron, output, "training");
-  } while(count < 300/*totalErr != save || totalErr/count < 0.0*/);
+  } while(count < 10000/*totalErr != save || totalErr/count < 0.0*/);
   my_write(neuron, output, "training");
 
   mat_free(neuron);
