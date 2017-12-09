@@ -13,8 +13,8 @@
 
 #define _NB_NEURON_ 10
 #define _NB_INPUT_ 25 	//5 * 5
-#define _NB_OUTPUT_ 3
-#define _NB_TRAINING_ 3
+#define _NB_OUTPUT_ 4
+#define _NB_TRAINING_ 4
 
 static
 void picture_to_double(SDL_Surface *surface, matrix_t *input)
@@ -38,14 +38,21 @@ void test(input_t **input)
 			      0.0, 1.0, 1.0, 1.0, 0.0,
 			      0.0, 1.0, 0.0, 1.0, 0.0,
 			      0.0, 1.0, 1.0, 1.0, 0.0};
-  memmove((*(input + 1))->mat->mat, mat1, sizeof(double) * 25);
+  memmove((*(input + 1))->mat->mat, mat2, sizeof(double) * 25);
 
   double mat3[]            = {0.0, 1.0, 0.0, 0.0, 0.0,
 			      0.0, 1.0, 0.0, 0.0, 0.0,
 			      0.0, 1.0, 0.0, 0.0, 0.0,
 			      0.0, 1.0, 0.0, 0.0, 0.0,
 			      0.0, 1.0, 1.0, 1.0, 0.0};
-  memmove((*(input + 2))->mat->mat, mat1, sizeof(double) * 25);
+  memmove((*(input + 2))->mat->mat, mat3, sizeof(double) * 25);
+
+  double mat4[]            = {1.0, 0.0, 1.0, 0.0, 1.0,
+			      0.0, 1.0, 0.0, 1.0, 0.0,
+			      1.0, 0.0, 1.0, 0.0, 1.0,
+			      0.0, 1.0, 0.0, 1.0, 0.0,
+			      1.0, 0.0, 1.0, 0.0, 1.0};
+  memmove((*(input + 3))->mat->mat, mat4, sizeof(double) * 25);
 }
 static
 input_t** loadInput(char* file)
@@ -57,7 +64,7 @@ input_t** loadInput(char* file)
     errx(1, "Could not load image training");
   struct dirent *actual;
 
-  while(i < 3/*(actual = readdir(rep)) != NULL*/)
+  while(i < _NB_OUTPUT_/*(actual = readdir(rep)) != NULL*/)
   {
     //if(actual->d_name[0] == '.')
     //  continue;
@@ -90,8 +97,8 @@ void training(char* file)
 {
   input_t **input = loadInput("trainingPicture/");
   input_t *inp = NULL;
-  matrix_t *neuron = mat_create(_NB_INPUT_ + 1, _NB_NEURON_);
-  matrix_t *output = mat_create(_NB_NEURON_ + 1, _NB_OUTPUT_);
+  matrix_t *neuron = mat_create(_NB_INPUT_ + 2, _NB_NEURON_);
+  matrix_t *output = mat_create(_NB_NEURON_ + 2, _NB_OUTPUT_);
   mat_rand(neuron);
   mat_rand(output);
   my_read(neuron, output, file);

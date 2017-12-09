@@ -50,6 +50,8 @@ void mat_rand(matrix_t *matr)
 
 void mat_activation(matrix_t *mat)
 {
-  for(int i = 0; i < mat->width * mat->height; ++i)
-    mat->mat[i] = sigmoid(mat->mat[i]);
+  for(int i = 0; i < mat->width; ++i)
+  {
+      mat->output[i] = sigmoid(mat->output[i] + mat->mat[i * mat->height + mat->height - 2]);
+  }
 }
