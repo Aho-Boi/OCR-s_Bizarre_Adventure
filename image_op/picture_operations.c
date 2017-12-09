@@ -69,20 +69,23 @@ size_t can_cut_y(double pixel_matrix[], size_t lines, size_t cols)
   size_t lim_count = lines * cols;
   size_t count = 0;
   size_t mid = lines/(lines * cols);
-  for(size_t y = 0; y < cols; y++)
+  for(size_t y = 0; y < lines; y++)
   {
-    size_t i = y;
-    while(i < lim_count && pixel_matrix[i] == 1)
+    for(size_t x = 0; x < cols; x++)
     {
-      i += cols;
-    }
-    if(i < lim_count)
-    {
-      count += 1;
-    }
-    else
-    {
-      count = 0;
+      size_t i = y;
+      while(i < lim_count && pixel_matrix[i * cols + x] == 1)
+      {
+        i++;
+      }
+      if(i < lim_count)
+      {
+        count += 1;
+      }
+      else
+      {
+        count = 0;
+      }
     }
     if(count >= mid)
     {
@@ -142,20 +145,23 @@ size_t can_cut_x(double pixel_matrix[], size_t lines, size_t cols)
   size_t lim_count = lines * cols;
   size_t count = 0;
   size_t mid = lines/(lines * cols);
-  for(size_t x = 0; x < lines; x++)
+  for(size_t x = 0; x < cols; x++)
   {
-    size_t i = x;
-    while(i < lim_count && pixel_matrix[i] == 1)
+    for(size_t y = 0; y < lines; y++)
     {
-      i += lines;
-    }
-    if(i < lim_count)
-    {
-      count += 1;
-    }
-    else
-    {
-      count = 0;
+      size_t i = x;
+      while(i < lim_count && pixel_matrix[y * cols + i] == 1)
+      {
+        i++;
+      }
+      if(i < lim_count)
+      {
+        count += 1;
+      }
+      else
+      { 
+        count = 0;
+      }
     }
     if(count >= mid)
     {
@@ -188,7 +194,7 @@ Tree x_cut(Tree *node, int level)
         for(size_t j = 0; j < cols; j++)
         {
           double value = node->key[i * cols + j];
-          left[i *  cols + j] = value;
+          left[i * cols + j] = value;
         }
       }
       for(size_t i = (lines - c); i < lines; i++)
@@ -218,14 +224,14 @@ void resize(double mat[], size_t lines, size_t cols, double res[])
     {
       for(size_t j = 0; j < cols; j++)
       {
-        res[i] = mat[i];
+        res[i * 16 + j] = mat[i * cols + j];
       }
     }
     for(int i = lines; i < 16; i++)
     {
       for(size_t j = cols; j < 16; j++)
       {
-        res[i] = 1;
+        res[i * 16 + j] = 1;
       }
     }
   }
@@ -237,18 +243,17 @@ void resize(double mat[], size_t lines, size_t cols, double res[])
       if(lines > 16)
       {
         size_t j1 = 0;
-        while(i1 < 4 && j1 < cols && mat[i1] == 1)
+        while(i1 < 4 && j1 < cols && mat[i1 * cols + j1] == 1)
         {
-          if(mat[i1] == 1)
+          if(mat[j1 * cols + i1] == 1)
           {
             i1++;
-            /*
             j1++;
             if(j1 >= cols)
             {
               j1 = 0;
               i1++;
-            }*/
+            }
           }
         }
       }
@@ -256,27 +261,25 @@ void resize(double mat[], size_t lines, size_t cols, double res[])
       if(cols > 16)
       {
         size_t i2 = 0;
-        while(i2 < lines && j2 < 4 && mat[j2] == 1)
+        while(i2 < lines && j2 < 4 && mat[i2 * cols + j2] == 1)
         {
           j2++;
-          /*
-          if(mat[i2 * cols + j2] == 1)
+          if(mat[j2 * cols + i2] == 1)
           {
             i2++;
             if(i2 >= lines)
             {
               i2 = 0;
-              j1++;
+              j2++;
             }
           }
-          */
         }
       }
       for(size_t x = 0; x < 16; x++)
       {
-        for(size_t y = 0; j2 < 16 ; y++)
+        for(size_t y = 0; y < 16 ; y++)
         {
-          res[x] = mat[x + i1 + j2];
+          res[x * 16 + y] = mat[(x + i1) * cols + y + j2];
         }
       }
     }      
@@ -310,9 +313,9 @@ void display_cut(Tree *node)
     {
       size_t line = node->key_lines;
       size_t cols = node->key_cols;
-    /*double res[16 * 16];
+  /*    double res[16 * 16];
       resize(node->key, line, cols, res); */
-      print_matrix(node->key, node->key_lines, node->key_cols);
+      print_matrix(node->key, line, cols);
     }
     if(node->left)
       display_cut(node->left);
