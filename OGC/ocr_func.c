@@ -2,63 +2,57 @@
 #include <stdlib.h>
 
 #include "mat_func.h"
-
-static inline
-double derivate(double x)
-{
-  return 1 - x * x;
-}
+#include "math_func.h"
 
 void work(matrix_t *input, matrix_t *neuron, matrix_t *output)
 {
-  neuron->output = mat_mult(input, neuron)->mat;
-  mat_tanh(neuron);
-  matrix_t *oN = mat_create(2, neuron->width);
-  oN->mat = neuron->output;
-  output->output = mat_mult(oN, output)->mat;
-  free(oN->output);
-  free(oN);
+  matrix_t *OH = mat_mult(input, neuron);
+  mat_activation(OH);
+  neuron->output = OH->mat;
+  matrix_t *out = mat_mult(OH, output);
+  mat_activation(out);
+  output->output = out->mat;
+  free(OH->output);
+  free(OH);
+  free(out->output);
+  free(out);
 }
 
-static
-double final_err(int expOutput, matrix_t *output)
+double back_prop(matrix_t *exp, matrix_t *neuron, matrix_t *output)
 {
-  double output_err = 0.0, err = 0.0;
+  double out;
+  int errO = output->height - 1, errN = neuron->height - 1;
+  int nbO = output->width, nbN = neuron->width;
 
-  for(int i = 0; i < output->width; ++i)
+  for(int i = 0; i < nbO; ++i) //erreur couche sortie
   {
-    err = (expOutput == i) - output->output[i];
-    output->mat[i * output->width] = err * derivate(output->output[i]);
-    output_err += 0.5 * err * err;
+    out = output->output[i];
+    output->mat[errO * (i + 1)] = (out - exp->mat[i]) * derivate(out);
   }
-
-  return output_err;
-}
-
-double back_prop(int expOutput, matrix_t *neuron, matrix_t *output)
-{
-  double err = final_err(expOutput, output), bias, d;
-
-  for(int i = 0; i < output->width; ++i)
+  for(int i = 0; i < nbO; ++i) //mise a jour poids intermediaire -> sortie
+  {
     for(int j = 0; j < output->height - 1; ++j)
     {
-      output->mat[i * output->height + j] -= 0.07 * err * neuron->output[i];
-      if(output->mat[i * output->height + j] > 5.0)
-        output->mat[i * output->height + j] = 5.0;
-      else if(output->mat[i * output->height + j] < -5.0)
-        output->mat[i * output->height + j] = -5.0;
+      out = output->output[i];
+      output->mat[i * output->height + j] -= output->mat[errO * (i + 1)] * out;
     }
-
-  for(int i = 0; i < neuron->width; ++i)
+  }
+  for(int i = 0; i < nbN; ++i) //erreur couche intermediaire
+  {
+    out = neuron->output[i];
+    neuron->mat[errN * (i + 1)] = 0.0;
+    for(int j = 0; j < nbO; ++j)
+      neuron->mat[errN * (i + 1)] += output->mat[j * output->height + i] * output->mat[errO * (j + 1)];
+    neuron->mat[errN * (i + 1)] *= derivate(out);
+  }
+  for(int i = 0; i < nbN; ++i) //mise a jour poids input -> intermediaire
   {
     for(int j = 0; j < neuron->height - 1; ++j)
     {
-      bias = output->mat[i * (output->height - 1)];
-      neuron->mat[i * neuron->height + j] -= 0.7 * bias * neuron->output[i];
+      out = neuron->output[i];
+      neuron->mat[i * neuron->height + j] -= neuron->mat[errN * (i + 1)] * out;
     }
-    d = derivate(neuron->output[i]);
-    neuron->mat[i * (neuron->height - 1)] -= d * err * 0.7;
   }
 
-  return err;
+  return 36.0;
 }

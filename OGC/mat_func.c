@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "mat_func.h"
+#include "math_func.h"
 
 /*
  * return an init matrix, init with 0
@@ -27,13 +28,13 @@ void mat_free(matrix_t *mat)
 
 matrix_t *mat_mult(matrix_t *mat1, matrix_t *mat2)
 {
-  int h = mat1->height - 1, c = mat1->width, w = mat2->width;
-  matrix_t *res = mat_create(h + 1, w);
+  int h = mat1->height, c = mat1->width, w = mat2->width;
+  matrix_t *res = mat_create(h, w);
 
-  for(int i = 0; i < h; ++i)
-    for(int j = 0; j < w; ++j)
+  for(int i = 0; i < w; ++i)
+    for(int j = 0; j < h; ++j)
       for(int k = 0; k < c; ++k)
-	res->mat[i*w + j] += mat1->mat[i*c + k] * mat2->mat[k*w + j];
+	res->mat[j*mat2->width + i] += mat1->mat[j*mat1->width + k] * mat2->mat[k*mat2->width + i];
 
   return res;
 }
@@ -47,8 +48,8 @@ void mat_rand(matrix_t *matr)
     matr->mat[i] = (rand() % 100 * 1.0) / 100.0 - 0.5;
 }
 
-void mat_tanh(matrix_t *neuron)
+void mat_activation(matrix_t *mat)
 {
-  for(int i = 0; i < neuron->width; ++i)
-    neuron->output[i] = tanh(neuron->output[i] + neuron->mat[i * (neuron->height - 1)]);
+  for(int i = 0; i < mat->width * mat->height; ++i)
+    mat->mat[i] = sigmoid(mat->mat[i]);
 }
