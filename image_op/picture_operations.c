@@ -110,7 +110,7 @@ Tree y_cut(Tree *node, int level)
     c = can_cut_y(node->key, lines, cols);
     if(c != 0)
     {
-      double upper[lines * c];
+      double upper[c * cols];
       double down[(lines - c) * cols];
       for(size_t j = 0; j < c; j++)
       {
@@ -313,8 +313,6 @@ void display_cut(Tree *node)
     {
       size_t line = node->key_lines;
       size_t cols = node->key_cols;
-     /* double res[16 * 16];
-      resize(node->key, line, cols, res); */
       print_matrix(node->key, line, cols);
     }
     if(node->left)
