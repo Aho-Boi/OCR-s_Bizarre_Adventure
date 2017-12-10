@@ -67,5 +67,6 @@ int main(int argc, char *argv[])
   display_image(img);
   Tree T = surface_to_tree(img);
   display_cut(&T);
+  free_tree(&T);
   return 0;
 }

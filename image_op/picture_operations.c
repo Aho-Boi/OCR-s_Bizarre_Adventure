@@ -8,16 +8,12 @@
 
 Tree surface_to_tree(SDL_Surface *surface)
 {
-  double pixel_matrix[surface->h * surface->w];
+  double *pixel_matrix = calloc(surface->h * surface->w, sizeof(double));
   for(int x = 0; x < surface->w; x++)
   {
     for(int y = 0; y < surface->h; y++)
     {   
-      if(getpixel(surface, x, y) != 0)
-      {
-        pixel_matrix[y * surface->w + x] = 0;
-      }
-      else
+      if(getpixel(surface, x, y) == 0)
       {
         pixel_matrix[y * surface->w + x] = 1;
       }
@@ -110,8 +106,8 @@ Tree y_cut(Tree *node, int level)
     c = can_cut_y(node->key, lines, cols);
     if(c != 0)
     {
-      double upper[c * cols];
-      double down[(lines - c) * cols];
+      double *upper = calloc(c * cols, sizeof(double));
+      double *down = calloc((lines - c) * cols, sizeof(double));
       for(size_t j = 0; j < c; j++)
       {
         for(size_t i = 0; i < cols; i++)
@@ -187,8 +183,8 @@ Tree x_cut(Tree *node, int level)
     c = can_cut_x(node->key, lines, cols);
     if(c != 0)
     {
-      double left[lines * c];
-      double right[lines * (cols - c)];
+      double *left = calloc(lines * c, sizeof(double));
+      double *right = calloc(lines * (cols - c), sizeof(double));
       for(size_t i = 0; i < lines; i++)
       {
         for(size_t j = 0; j < c; j++)
@@ -320,5 +316,21 @@ void display_cut(Tree *node)
     if(node->right)
       display_cut(node->right);
   } 
+}
+
+void free_tree(Tree *node)
+{
+  if(node->valid)
+  {
+    if(node->left)
+      free_tree(node->left);
+    if(node->right)
+      free_tree(node->right);
+    if(!node->left && !node->right)
+    {
+      free(node->key);
+      free(node);
+    }
+  }
 }
 
