@@ -63,7 +63,7 @@ size_t can_cut_y(double pixel_matrix[], size_t lines, size_t cols)
 {
   size_t cut = 0;
   size_t count = 0;
-  size_t mid = 1;
+  size_t mid = cols / lines;
   for(size_t y = 0; y < lines; y++)
   {
     size_t x = 0;
@@ -135,7 +135,7 @@ size_t can_cut_x(double pixel_matrix[], size_t lines, size_t cols)
 {
   size_t cut = 0;
   size_t count = 0;
-  size_t mid = 1;
+  size_t mid = lines / cols;
   for(size_t x = 0; x < cols; x++)
   {
     size_t y = 0;
