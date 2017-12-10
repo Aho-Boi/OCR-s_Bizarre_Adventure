@@ -326,11 +326,7 @@ void free_tree(Tree *node)
       free_tree(node->left);
     if(node->right)
       free_tree(node->right);
-    if(!node->left && !node->right)
-    {
-      free(node->key);
-      free(node);
-    }
+    free(node->key);
   }
 }
 
