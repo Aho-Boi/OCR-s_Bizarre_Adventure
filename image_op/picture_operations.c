@@ -62,26 +62,22 @@ void addNode(Tree **tree, double key[], size_t lines, size_t cols, int lor)
 size_t can_cut_y(double pixel_matrix[], size_t lines, size_t cols)
 {
   size_t cut = 0;
-  size_t lim_count = lines * cols;
   size_t count = 0;
-  size_t mid = lines/(lines * cols);
+  size_t mid = 1;
   for(size_t y = 0; y < lines; y++)
   {
-    for(size_t x = 0; x < cols; x++)
+    size_t x = 0;
+    while(x < cols && pixel_matrix[y * cols + x] == 0)
     {
-      size_t i = y;
-      while(i < lim_count && pixel_matrix[i * cols + x] == 1)
-      {
-        i++;
-      }
-      if(i < lim_count)
-      {
-        count += 1;
-      }
-      else
-      {
-        count = 0;
-      }
+      x++;
+    }
+    if(x >= cols)
+    {
+      count += 1;
+    }
+    else
+    {
+      count = 0;
     }
     if(count >= mid)
     {
@@ -138,26 +134,22 @@ Tree y_cut(Tree *node, int level)
 size_t can_cut_x(double pixel_matrix[], size_t lines, size_t cols)
 {
   size_t cut = 0;
-  size_t lim_count = lines * cols;
   size_t count = 0;
-  size_t mid = lines/(lines * cols);
+  size_t mid = 1;
   for(size_t x = 0; x < cols; x++)
   {
-    for(size_t y = 0; y < lines; y++)
+    size_t y = 0;
+    while(y < lines && pixel_matrix[y * cols + x] == 0)
     {
-      size_t i = x;
-      while(i < lim_count && pixel_matrix[y * cols + i] == 1)
-      {
-        i++;
-      }
-      if(i < lim_count)
-      {
-        count += 1;
-      }
-      else
-      { 
-        count = 0;
-      }
+      y++;
+    }
+    if(y >= lines)
+    {
+      count += 1;
+    }
+    else
+    { 
+      count = 0;
     }
     if(count >= mid)
     {
@@ -190,7 +182,7 @@ Tree x_cut(Tree *node, int level)
         for(size_t j = 0; j < c; j++)
         {
           double value = node->key[i * cols + j];
-          left[i * cols + j] = value;
+          left[i * c + j] = value;
         }
       }
       for(size_t i = 0; i < lines; i++)
@@ -198,7 +190,7 @@ Tree x_cut(Tree *node, int level)
         for(size_t j = cols - c; j < cols; j++)
         {
           double value = node->key[i * cols + j];
-          right[i * cols + j] = value;
+          right[i * (cols - c) + j] = value;
         }
       }
       addNode(&node, left, lines, c, 0);
