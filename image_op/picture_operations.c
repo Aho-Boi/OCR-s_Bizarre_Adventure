@@ -15,11 +15,11 @@ Tree surface_to_tree(SDL_Surface *surface)
     {   
       if(getpixel(surface, x, y) != 0)
       {
-        pixel_matrix[y * surface->w + x] = 1;
+        pixel_matrix[y * surface->w + x] = 0;
       }
       else
       {
-        pixel_matrix[y * surface->w + x] = 0;
+        pixel_matrix[y * surface->w + x] = 1;
       }
     }
   }
@@ -292,7 +292,7 @@ void print_matrix(double mat[], size_t lines, size_t cols)
   {
     for(size_t j = 0; j < cols; j++)
     {
-      if(mat[i * cols + j] == 0)
+      if(mat[i * cols + j] == 1)
       {
         couleur("31");
         printf("%f ", mat[i * cols + j]);
@@ -313,9 +313,9 @@ void display_cut(Tree *node)
     {
       size_t line = node->key_lines;
       size_t cols = node->key_cols;
-      double res[16 * 16];
-      resize(node->key, line, cols, res); 
-      print_matrix(res, 16, 16);
+     /* double res[16 * 16];
+      resize(node->key, line, cols, res); */
+      print_matrix(node->key, line, cols);
     }
     if(node->left)
       display_cut(node->left);
