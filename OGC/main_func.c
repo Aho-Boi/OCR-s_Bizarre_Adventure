@@ -13,8 +13,8 @@
 
 #define _NB_NEURON_ 10
 #define _NB_INPUT_ 25 	//5 * 5
-#define _NB_OUTPUT_ 4
-#define _NB_TRAINING_ 4
+#define _NB_OUTPUT_ 3
+#define _NB_TRAINING_ 3
 
 static
 void picture_to_double(SDL_Surface *surface, matrix_t *input)
@@ -26,33 +26,35 @@ void picture_to_double(SDL_Surface *surface, matrix_t *input)
 
 void test(input_t **input)
 {
-  double mat1[]     = {0.0, 0.0, 0.0, 0.0, 0.0,
-			0.0, 1.0, 1.0, 1.0, 0.0,
+
+  double mat1[]     = {1.0, 0.0, 1.0, 0.0, 1.0,
 			0.0, 1.0, 0.0, 1.0, 0.0,
-			0.0, 1.0, 1.0, 1.0, 0.0,
-			0.0, 1.0, 0.0, 1.0, 0.0};
+			1.0, 0.0, 1.0, 0.0, 1.0,
+			0.0, 1.0, 0.0, 1.0, 0.0,
+			1.0, 0.0, 1.0, 0.0, 1.0};
   memmove((*input)->mat->mat, mat1, sizeof(double) * 25);
 
-  double mat2[]           = {0.0, 1.0, 1.0, 1.0, 0.0,
-      			      0.0, 1.0, 0.0, 1.0, 0.0,
-			      0.0, 1.0, 1.0, 1.0, 0.0,
+  double mat2[]           = {0.0, 1.0, 0.0, 1.0, 0.0,
+      			      1.0, 0.0, 1.0, 0.0, 1.0,
+			      0.0, 1.0, 0.0, 1.0, 0.0,
+			      1.0, 0.0, 1.0, 0.0, 1.0,
+			      0.0, 1.0, 0.0, 1.0, 0.0};
+  memmove((*(input + 1))->mat->mat, mat2, sizeof(double) * 25);
+ 
+  double mat3[]            = {0.0, 1.0, 1.0, 1.0, 0.0,
+			      0.0, 1.0, 0.0, 1.0, 0.0,
+			      0.0, 1.0, 0.0, 1.0, 0.0,
 			      0.0, 1.0, 0.0, 1.0, 0.0,
 			      0.0, 1.0, 1.0, 1.0, 0.0};
-  memmove((*(input + 1))->mat->mat, mat2, sizeof(double) * 25);
-
-  double mat3[]            = {0.0, 1.0, 0.0, 0.0, 0.0,
-			      0.0, 1.0, 0.0, 0.0, 0.0,
-			      0.0, 1.0, 0.0, 0.0, 0.0,
-			      0.0, 1.0, 0.0, 0.0, 0.0,
-			      0.0, 1.0, 1.0, 1.0, 0.0};
   memmove((*(input + 2))->mat->mat, mat3, sizeof(double) * 25);
-
+/*
   double mat4[]            = {1.0, 0.0, 1.0, 0.0, 1.0,
 			      0.0, 1.0, 0.0, 1.0, 0.0,
 			      1.0, 0.0, 1.0, 0.0, 1.0,
 			      0.0, 1.0, 0.0, 1.0, 0.0,
 			      1.0, 0.0, 1.0, 0.0, 1.0};
   memmove((*(input + 3))->mat->mat, mat4, sizeof(double) * 25);
+*/
 }
 static
 input_t** loadInput(char* file)
@@ -105,17 +107,19 @@ void training(char* file)
 
   double totalErr = 0.0, save = 0.0, localErr = 0.0;
   size_t count = 1;
+  int j = 0;
 
   do
   {
     save = totalErr;
     for(int i = 0; i < _NB_TRAINING_; ++i)
     {
-      inp = *(input + i);
+      j = rand() % _NB_TRAINING_;
+      inp = *(input + j);
       work(inp->mat, neuron, output);
       localErr = back_prop(inp->expOutput, inp->mat, neuron, output);
       output_print(inp->exp, output);
-      //printf("ERR : %f\n", localErr);
+      printf("ERR : %f\n", localErr);
       totalErr += localErr;
     }
     //printf("Total error : %g\n", totalErr);
