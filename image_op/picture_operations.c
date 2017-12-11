@@ -24,14 +24,16 @@ Tree surface_to_tree(SDL_Surface *surface)
   node.key = pixel_matrix;
   node.key_lines = surface->h;
   node.key_cols = surface->w;
+  node.left = NULL;
+  node.right = NULL;
   return node;
 }
 
 void addNode(Tree **tree, double key[], size_t lines, size_t cols, int lor)
 {
-    Tree *tmpNode;
+    Tree *tmpNode = malloc(sizeof(Tree));
     Tree *tmpTree = *tree;
-    Tree *node = malloc(sizeof(node));
+    Tree *node = malloc(sizeof(Tree));
     node->valid = 1;
     node->key = key;
     node->key_lines = lines;
@@ -120,10 +122,10 @@ Tree y_cut(Tree *node, int level)
           down[j * cols + i] = value;
         }
       }
-        addNode(&node, upper, lines, c, 0);
-        addNode(&node, down, lines - c, cols, 1);
-        x_cut(node->left, 1);
-        y_cut(node->right, 1);
+      addNode(&node, upper, lines, c, 0);
+      addNode(&node, down, lines - c, cols, 1);
+      *node->left =  x_cut(node->left, 1);
+      *node->left =  y_cut(node->right, 1);
       return *node;
     }
     else
@@ -195,8 +197,8 @@ Tree x_cut(Tree *node, int level)
       }
       addNode(&node, left, lines, c, 0);
       addNode(&node, right, lines, cols - c, 1);
-      y_cut(node->left, 1);
-      x_cut(node->right, 1);
+      *node->left = y_cut(node->left, 1);
+      *node->right = x_cut(node->right, 1);
       return *node;
     }
     else

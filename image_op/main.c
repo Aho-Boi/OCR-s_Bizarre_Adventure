@@ -47,9 +47,6 @@ SDL_Surface* display_image(SDL_Surface *img)
   // Update the screen
   SDL_UpdateRect(screen, 0, 0, img->w, img->h);
  
-  // wait for a key
-  wait_for_keypressed();
- 
   // return the screen for further uses
   return screen;
 }
@@ -68,6 +65,6 @@ int main(int argc, char *argv[])
   Tree T = surface_to_tree(img);
   T = y_cut(&T, 1);
   display_cut(&T);
-  free_tree(&T);
+  free_tree(&T); 
   return 0;
 }
