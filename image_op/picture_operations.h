@@ -17,9 +17,9 @@ typedef struct _Tree
   struct _Tree *right;
 }Tree;
 
-Tree surface_to_tree(SDL_Surface *surface);
-Tree y_cut(Tree *node, int level);
-Tree x_cut(Tree *node, int level);
+Tree* surface_to_tree(SDL_Surface *surface);
+Tree* y_cut(Tree *node, int level);
+Tree* x_cut(Tree *node, int level);
 void display_cut(Tree *node);
 void free_tree(Tree *node);
 

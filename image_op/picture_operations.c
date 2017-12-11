@@ -1,4 +1,4 @@
-
+# include <stdio.h>
 # include "picture_operations.h"
 # include "load_picture.h"
 # include <stdlib.h>
@@ -6,7 +6,7 @@
 # include <SDL_image.h>
 # define couleur(param) printf("\033[%sm",param)
 
-Tree surface_to_tree(SDL_Surface *surface)
+Tree* surface_to_tree(SDL_Surface *surface)
 {
   double *pixel_matrix = calloc(surface->h * surface->w, sizeof(double));
   for(int x = 0; x < surface->w; x++)
@@ -19,21 +19,23 @@ Tree surface_to_tree(SDL_Surface *surface)
       }
     }
   }
-  Tree node;
-  node.valid = 1;
-  node.key = pixel_matrix;
-  node.key_lines = surface->h;
-  node.key_cols = surface->w;
-  node.left = NULL;
-  node.right = NULL;
+  Tree *node = malloc(sizeof(Tree));
+  node->valid = 1;
+  node->key = pixel_matrix;
+  node->key_lines = surface->h;
+  node->key_cols = surface->w;
+  node->left = NULL;
+  node->right = NULL;
   return node;
 }
 
 void addNode(Tree *tree, double key[], size_t lines, size_t cols, int lor)
 {
-  //Tree *tmpNode = (Tree *)malloc(sizeof(Tree));
+  //Tree *tmpNode = malloc(sizeof(Tree));
   //Tree *tmpTree = *tree;
-  Tree *node = NULL;
+  Tree *node = malloc(sizeof(Tree));
+  //printf("lol %p", node);
+//Tree *node = NULL;
   node->valid = 1;
   node->key = key;
   node->key_lines = lines;
@@ -99,11 +101,11 @@ size_t can_cut_y(double pixel_matrix[], size_t lines, size_t cols)
   return cut;
 }
 
-Tree y_cut(Tree *node, int level)
+Tree* y_cut(Tree *node, int level)
 {
   if(level == 3)
   {
-    return *node;
+    return node;
   }
   else
   {
@@ -133,9 +135,11 @@ Tree y_cut(Tree *node, int level)
       }
       addNode(node, upper, lines, c, 0);
       addNode(node, down, lines - c, cols, 1);
-      *node->left =  x_cut(node->left, 1);
-      *node->left =  y_cut(node->right, 1);
-      return *node;
+      free(upper);
+      free(down);
+      x_cut(node->left, 1);
+      y_cut(node->right, 1);
+      return node;
     }
     else
       return x_cut(node, level + 1);
@@ -172,11 +176,11 @@ size_t can_cut_x(double pixel_matrix[], size_t lines, size_t cols)
 
 }
 
-Tree x_cut(Tree *node, int level)
+Tree* x_cut(Tree *node, int level)
 {
   if(level == 3)
   {
-    return *node;
+    return node;
   }
   else
   {
@@ -206,9 +210,11 @@ Tree x_cut(Tree *node, int level)
       }
       addNode(node, left, lines, c, 0);
       addNode(node, right, lines, cols - c, 1);
-      *node->left = y_cut(node->left, 1);
-      *node->right = x_cut(node->right, 1);
-      return *node;
+      //free(left);
+      //free(right);
+      y_cut(node->left, 1);
+      x_cut(node->right, 1);
+      return node;
     }
     else
       return y_cut(node, level + 1);
@@ -323,14 +329,11 @@ void display_cut(Tree *node)
 
 void free_tree(Tree *node)
 {
-  if(node->valid)
-  {
-    if(node->left)
-      free_tree(node->left);
-    if(node->right)
-      free_tree(node->right);
-    free(node->key);
-    free(node);
-  }
+  if(node->left)
+    free_tree(node->left);
+  if(node->right)
+    free_tree(node->right);
+  free(node->key);
+  free(node);
 }
 

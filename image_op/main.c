@@ -62,9 +62,9 @@ int main(int argc, char *argv[])
   display_image(img);
   binarize_otsu(img);
   display_image(img);
-  Tree T = surface_to_tree(img);
-  T = y_cut(&T, 1);
-  display_cut(&T);
-  free_tree(&T); 
+  Tree *T = surface_to_tree(img);
+  T = y_cut(T, 1);
+  display_cut(T);
+  free_tree(T); 
   return 0;
 }
