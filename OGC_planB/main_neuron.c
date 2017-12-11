@@ -129,8 +129,8 @@ int main(int argc, char *argv[])
   else if (*argv[1] == '2')
   {
     file = fopen("training", "r");
-    char *content = malloc(100000*sizeof(char));
-    freadP(content, 100000, file);
+    char *content = malloc(1000000000*sizeof(char));
+    freadP(content, 1000000000, file);
     loadWeight(hidden, output, content);
     fclose(file);
 /*

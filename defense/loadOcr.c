@@ -24,31 +24,26 @@ void picture_to_double(SDL_Surface *surface, int *input)
 }
 
 static inline
-int round(double x)
+int my_round(double x)
 {
-  return (x % 1.0 >= 0..5)? (int)x + 1 : (int)x;
+  return (x - floor(x) >= 0.5)? (int)x + 1 : (int)x;
 }
 
-int launchOCR(char* file, char* training)
+int launchOCR(char* cfile, char* training)
 {
-  FILE *file = fopen(file, "r");
-  if(!file)
-    return -42;
-  fclose(file);
-
   neuron *hidden = neuron_init(_LENH_, _LENI_);
   neuron *output = neuron_init(_LENO_, _LENH_);
 
   int *input = malloc(_LENI_ * sizeof(int));
-  picture_to_double(IMG_Load(file), input);
+  picture_to_double(IMG_Load(cfile), input);
 
-  file = fopen(training, "r");
-  char *content = malloc(100000*sizeof(char));
-  freadP(content, 100000, file);
+  FILE *file = fopen(training, "r");
+  char *content = malloc(100000000 * sizeof(char));
+  freadP(content, 100000000, file);
   loadWeight(hidden, output, content);
   fclose(file);
  
   work(input, 36, hidden, output);
   
-  return round(output->exit);
+  return my_round(output->exit);
 }
