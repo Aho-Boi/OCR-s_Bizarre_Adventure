@@ -1,22 +1,14 @@
 ## OCR
  
-CC=gcc
+gtk_OCR.o: 
+	gcc -Wall -Wextra -g gtk_OCR.c `pkg-config --cflags --libs gtk+-3.0` -rdynamic -o mainGTK
  
-CPPFLAGS= `pkg-config --cflags 
-CFLAGS= -Wall -Wextra -rdynamic
-LDFLAGS=
-LDLIBS= `pkg-config --libs gtk+-3.0`
- 
-OBJ= gtk_OCR.o
-DEP= ${SRC:.o=.d}
- 
-all: gtk_OCR
- 
-main: ${OBJ}
- 
+SRC = gtk_OCR.c ocr.c
+DEP = ${SRC:.c=.d}
+
 clean:
 	
  
--include ${DEP}
+-include ${PRG}
  
 # END
