@@ -23,14 +23,14 @@ void picture_to_double(SDL_Surface *surface, int *input)
       input[x * surface->w +y] = (getpixel(surface, x, y) == 0);
 }
  
-void loadInput(int *input)
+void loadInput(int *input, int *exp)
 {
   DIR *rep = opendir("trainingPicture/");
   if(!rep)
     errx(1, "Could not load image training");
   struct dirent *actual;
 
-  for(int i = 0; i < _NB_INPUT_ + 2; ++i)
+  for(int i = 0; i < _NB_INPUT_;)
   {
     actual = readdir(rep);
     if(actual->d_name[0] == '.')
@@ -38,7 +38,9 @@ void loadInput(int *input)
     char *dir = "trainingPicture/";
     char *conc = my_strcon(dir, actual->d_name);
     int l = atoi(actual->d_name);
-    picture_to_double(IMG_Load(conc), input + (l * _LENI_));
+    exp[i] = l;
+    picture_to_double(IMG_Load(conc), input + (i * _LENI_));
+    i++;
   }
 }
 
@@ -53,36 +55,9 @@ int main(int argc, char *argv[])
   neuron *output = neuron_init(_LENO_, _LENH_);
 
   int *input = malloc(_NB_INPUT_ * _LENI_ * sizeof(int));
-/*  int mat1[]     = {1, 0, 1, 0, 1,
-		      0, 1, 0, 1, 0,
-		      1, 0, 1, 0, 1,
-		      0, 1, 0, 1, 0,
-		      1, 0, 1, 0, 1};
-  memmove(input, mat1, sizeof(int) * 25);
+  int *exp = malloc(_NB_INPUT_ * sizeof(int));
 
-  int mat2[]           = {0, 1, 0, 1, 0,
-			      1, 0, 1, 0, 1,
-			      0, 1, 0, 1, 0,
-			      1, 0, 1, 0, 1,
-			      0, 1, 0, 1, 0};
-  memmove(input + 1 * _LENI_, mat2, sizeof(int) * 25);
- 
-  int mat3[]            = {0, 1, 1, 1, 0,
-			      0, 1, 0, 1, 0,
-			      0, 1, 0, 1, 0,
-			      0, 1, 0, 1, 0,
-			      0, 1, 1, 1, 0};
-  memmove(input + 2 * _LENI_, mat3, sizeof(int) * 25);
-
-  int mat4[]            = {0, 1, 0, 0, 0,
-			      0, 1, 0, 0, 0,
-			      0, 1, 0, 0, 0,
-			      0, 1, 0, 0, 0,
-			      0, 1, 1, 1, 0};
-  memmove(input + 3 * _LENI_, mat4, sizeof(int) * 25);
-*/
-
-  loadInput(input);
+  loadInput(input, exp);
   FILE *file = NULL;
 // training
   if (*argv[1] == '1')
@@ -105,9 +80,9 @@ int main(int argc, char *argv[])
       save = totalErr;
       for(int j = 0; j < _NB_INPUT_; ++j)
       {
-	localErr = work(input + j * _LENI_, j, hidden, output);
+	localErr = work(input + j * _LENI_, exp[j], hidden, output);
 	double oe = output->exit;
-	printf("RESULT FOR %d = %f : LocalErr = %f\n", j, oe, localErr);
+	printf("RESULT FOR %d = %f : LocalErr = %f\n", exp[j], oe, localErr);
 	adaptWeight(localErr, input + j * _LENI_, hidden, output);
 	totalErr += localErr;
       }
@@ -129,8 +104,8 @@ int main(int argc, char *argv[])
   else if (*argv[1] == '2')
   {
     file = fopen("training", "r");
-    char *content = malloc(100000*sizeof(char));
-    freadP(content, 100000, file);
+    char *content = malloc(1000000000*sizeof(char));
+    freadP(content, 1000000000, file);
     loadWeight(hidden, output, content);
     fclose(file);
 /*
