@@ -29,36 +29,45 @@ Tree surface_to_tree(SDL_Surface *surface)
   return node;
 }
 
-void addNode(Tree **tree, double key[], size_t lines, size_t cols, int lor)
+void addNode(Tree *tree, double key[], size_t lines, size_t cols, int lor)
 {
-    Tree *tmpNode = malloc(sizeof(Tree));
-    Tree *tmpTree = *tree;
-    Tree *node = malloc(sizeof(Tree));
-    node->valid = 1;
-    node->key = key;
-    node->key_lines = lines;
-    node->key_cols = cols;
-    node->left = NULL;
-    node->right = NULL;
-
-    if(tmpTree)
+  //Tree *tmpNode = (Tree *)malloc(sizeof(Tree));
+  //Tree *tmpTree = *tree;
+  Tree *node = NULL;
+  node->valid = 1;
+  node->key = key;
+  node->key_lines = lines;
+  node->key_cols = cols;
+  node->left = NULL;
+  node->right = NULL;
+  if(lor == 1) 
+  {
+    tree->right = node;
+  }
+  else 
+  { 
+    tree->left = node;
+  }
+  /*
+  if(tmpTree)
+  {
+    while(tmpTree)
     {
-      while(tmpTree)
+      if(lor == 1) 
       {
-         if(lor == 1) 
-         {
-          tmpNode->right = node;
-         }
-        if(lor == 0) 
-        { 
-          tmpNode->left = node;
-        }
+        tmpNode->right = node;
+      }
+      if(lor == 0) 
+      { 
+        tmpNode->left = node;
       }
     }
-    else 
-    {
-     *tree = node;
-    }
+  }
+  else 
+  {
+    *tree = node;
+  }
+  */
 }
 
 size_t can_cut_y(double pixel_matrix[], size_t lines, size_t cols)
@@ -122,8 +131,8 @@ Tree y_cut(Tree *node, int level)
           down[j * cols + i] = value;
         }
       }
-      addNode(&node, upper, lines, c, 0);
-      addNode(&node, down, lines - c, cols, 1);
+      addNode(node, upper, lines, c, 0);
+      addNode(node, down, lines - c, cols, 1);
       *node->left =  x_cut(node->left, 1);
       *node->left =  y_cut(node->right, 1);
       return *node;
@@ -137,8 +146,8 @@ size_t can_cut_x(double pixel_matrix[], size_t lines, size_t cols)
 {
   size_t cut = 0;
   size_t count = 0;
-  size_t mid = lines / cols;
-  for(size_t x = 0; x < cols; x++)
+  size_t mid = cols / lines;
+  for(size_t x = 1; x < cols; x++)
   {
     size_t y = 0;
     while(y < lines && pixel_matrix[y * cols + x] == 0)
@@ -146,7 +155,7 @@ size_t can_cut_x(double pixel_matrix[], size_t lines, size_t cols)
       y++;
     }
     if(y >= lines)
-    {
+    { 
       count += 1;
     }
     else
@@ -195,8 +204,8 @@ Tree x_cut(Tree *node, int level)
           right[i * (cols - c) + j] = value;
         }
       }
-      addNode(&node, left, lines, c, 0);
-      addNode(&node, right, lines, cols - c, 1);
+      addNode(node, left, lines, c, 0);
+      addNode(node, right, lines, cols - c, 1);
       *node->left = y_cut(node->left, 1);
       *node->right = x_cut(node->right, 1);
       return *node;
@@ -321,6 +330,7 @@ void free_tree(Tree *node)
     if(node->right)
       free_tree(node->right);
     free(node->key);
+    free(node);
   }
 }
 
