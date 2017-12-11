@@ -1,4 +1,5 @@
 #include <gtk/gtk.h>
+#include <string.h>
 
 GtkWidget * g_lbl_filename;
 //gchar * filename;
@@ -25,6 +26,16 @@ int main (int argc, char *argv[])
   return 1;
 }
 
+char* from_path_to_file (char * path)
+{
+  size_t i = strlen(path);
+  path += i;
+  while (*path != '/')
+  {
+    path -= 1; 
+  }
+  return path;
+}
 
 void on_buttonStart_clicked(){
   
@@ -54,6 +65,7 @@ void on_Selection_clicked(GtkBuilder *builder, GtkWidget *FileChoose)
 {
   builder = builder;
   gchar * filename = gtk_file_chooser_get_filename(FileChoose);
+  filename = from_path_to_file(filename);
   gtk_label_set_text(GTK_LABEL(g_lbl_filename), filename);
   gtk_widget_hide(FileChoose);
 }
