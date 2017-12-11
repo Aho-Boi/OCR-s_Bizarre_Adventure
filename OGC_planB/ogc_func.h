@@ -1,10 +1,11 @@
 #ifndef _XOR_FUNC_
 #define _XOR_FUNC_
 
-#define _LENI_ 81
-#define _LENH_ 10
+#define _LENI_ 256
+#define _LENH_ 25
 #define _LENO_ 1
-#define _NB_INPUT_ 4
+#define _NB_INPUT_ 3
+#define _NB_TURN_ 8000
 
 typedef struct neuron neuron;
 

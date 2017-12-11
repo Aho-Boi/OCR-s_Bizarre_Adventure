@@ -11,10 +11,13 @@
 #include "load_picture.h"
 #include "ogc_func.h"
 #include "my_string.h"
+#include "pixel_color.h"
 
 static
 void picture_to_double(SDL_Surface *surface, int *input)
 {
+  set_pixel_gray(surface);
+  binarize_otsu(surface);
   for(int x = 0; x < surface->h; ++x)
     for(int y = 0; y < surface->w; ++y)
       input[x * surface->w +y] = (getpixel(surface, x, y) == 0);
@@ -116,7 +119,7 @@ int main(int argc, char *argv[])
 	fwriteP(hidden, output, file);
 	fclose(file);
       }
-    }while(/*totalErr != save || totalErr/count < 0.0*/count < 1000);
+    }while(/*totalErr != save || totalErr/count < 0.0*/count < _NB_TURN_);
 
     file = fopen("training", "w");
     fwriteP(hidden, output, file);
