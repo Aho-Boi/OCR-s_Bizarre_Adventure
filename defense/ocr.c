@@ -7,7 +7,7 @@
 
 #include "../OGC_planB/my_string.h"
 #include "loadOcr.h"
-//#include "ocr.h"
+#include "ocr.h"
 
 char* ocr(char *argv)
 {
