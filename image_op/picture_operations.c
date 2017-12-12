@@ -31,11 +31,7 @@ Tree* surface_to_tree(SDL_Surface *surface)
 
 void addNode(Tree *tree, double key[], size_t lines, size_t cols, int lor)
 {
-  //Tree *tmpNode = malloc(sizeof(Tree));
-  //Tree *tmpTree = *tree;
   Tree *node = malloc(sizeof(Tree));
-  //printf("lol %p", node);
-//Tree *node = NULL;
   node->valid = 1;
   node->key = key;
   node->key_lines = lines;
@@ -50,26 +46,6 @@ void addNode(Tree *tree, double key[], size_t lines, size_t cols, int lor)
   { 
     tree->left = node;
   }
-  /*
-  if(tmpTree)
-  {
-    while(tmpTree)
-    {
-      if(lor == 1) 
-      {
-        tmpNode->right = node;
-      }
-      if(lor == 0) 
-      { 
-        tmpNode->left = node;
-      }
-    }
-  }
-  else 
-  {
-    *tree = node;
-  }
-  */
 }
 
 size_t can_cut_y(double pixel_matrix[], size_t lines, size_t cols)
