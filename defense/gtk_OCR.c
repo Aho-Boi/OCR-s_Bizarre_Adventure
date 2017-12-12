@@ -1,6 +1,6 @@
 #include <gtk/gtk.h>
 #include <string.h>
-#include "../defense/ocr.h"
+#include "ocr.h"
 
 GtkWidget * g_resOCR;
 GtkWidget * g_lbl_filename;

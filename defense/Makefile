@@ -1,26 +1,47 @@
-# EPITA Practical Programming S3 - 2016/2017
-# Makefile
-# Marwan Burelle
+## OCR
  
-# Compilers and options
-CC=gcc
-CPPFLAGS= -MMD `pkg-config --cflags sdl` 
-CFLAGS= -Wall -Wextra -std=c99 -pedantic -O0 -g
-LDFLAGS=
-LDLIBS= -lm `pkg-config --libs sdl` -lSDL_image
- 
-SRC = ../OGC_planB/load_picture.c ../OGC_planB/ogc_func.c ../OGC_planB/my_string.c ../OGC_planB/pixel_color.c loadOcr.c ocr.c
-OBJ = ${SRC:.c=.o}
-DEP = ${SRC:.c=.d}
- 
-all: ocr
- 
-ocr: ${OBJ}
-  
-.PHONY: clean
+#gtk_OCR: 
+#	gcc -Wall -Wextra -g gtk_OCR.c `pkg-config --cflags --libs gtk+-3.0` -rdynamic -o mainGTK
 
-clean:
-	${RM} ${OBJ} ${DEP} ocr
+#
+# Variables:
+#
+CC = gcc
+BIN = mainGtk
+SRC = gtk_OCR.c
+OBJ = gtk_OCR.o
  
--include ${DEP}
-# END
+ 
+#
+# Flags d'erreurs:
+#
+ 
+ 
+#
+# Flags pour le compilateur:
+# 
+CFLAGS = `pkg-config --cflags gtk+-3.0` -Wall -Wextra -rdynamic
+ 
+ 
+#
+# Flags pour l'editeur de liens:
+#
+ 
+LDFLAGS = `pkg-config --libs gtk+-3.0`
+ 
+ 
+#
+# Construction du programme:
+#
+all: $(BIN)
+ 
+$(BIN): $(SRC)
+	$(CC) $(CFLAGS) -c $(SRC)
+	$(CC) $(LDFLAGS) -o $(BIN) $(OBJ)
+ 
+ 
+#
+# Nettoyage:
+#
+clean:
+	rm -f *.o *~ core $(BIN)
