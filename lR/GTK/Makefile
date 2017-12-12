@@ -9,18 +9,18 @@ CFLAGS= -Wall -Wextra -std=c99 -pedantic -O0 -g -rdynamic
 LDFLAGS=
 LDLIBS= -lm `pkg-config --libs sdl` -lSDL_image `pkg-config --libs gtk+-3.0`
  
-SRC = ../ocr/load_picture.c ../ocr/ogc_func.c ../ocr/my_string.c ../ocr/pixel_color.c loadOcr.c ocr.c gtk_OCR.c
+SRC = ../ocr/load_picture.c ../ocr/ogc_func.c ../ocr/my_string.c ../ocr/pixel_color.c ../defense/loadOcr.c ../defense/ocr.c gtk_OCR.c
 OBJ = ${SRC:.c=.o}
 DEP = ${SRC:.c=.d}
  
-all: ocr
+all: gtk_OCR
  
-ocr: ${OBJ}
+gtk_OCR: ${OBJ}
   
 .PHONY: clean
 
 clean:
-	${RM} ${OBJ} ${DEP} ocr
+	${RM} ${OBJ} ${DEP} gtk_OCR
  
 -include ${DEP}
 # END

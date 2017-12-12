@@ -3,11 +3,11 @@
 # Marwan Burelle
  
 # Compilers and options
-CC=gcc
-CPPFLAGS= -MMD `pkg-config --cflags sdl` 
-CFLAGS= -Wall -Wextra -std=c99 -pedantic -O0 -g
+CC=gcc -rdynamic
+CPPFLAGS= -MMD `pkg-config --cflags sdl` `pkg-config --cflags gtk+-3.0`
+CFLAGS= -rdynamic -Wall -rdynamic -Wextra -rdynamic -std=c99 -rdynamic -pedantic -O0 -g -rdynamic
 LDFLAGS=
-LDLIBS= -lm `pkg-config --libs sdl` -lSDL_image
+LDLIBS= -lm `pkg-config --libs sdl` -lSDL_image `pkg-config --libs gtk+-3.0`
  
 SRC = ../ocr/load_picture.c ../ocr/ogc_func.c ../ocr/my_string.c ../ocr/pixel_color.c loadOcr.c ocr.c
 OBJ = ${SRC:.c=.o}
