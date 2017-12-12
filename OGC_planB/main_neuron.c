@@ -23,7 +23,7 @@ void picture_to_double(SDL_Surface *surface, int *input)
       input[x * surface->w +y] = (getpixel(surface, x, y) == 0);
 }
  
-void loadInput(int *input, int *exp)
+void loadInput(int *input, double *exp)
 {
   DIR *rep = opendir("trainingPicture/");
   if(!rep)
@@ -37,8 +37,8 @@ void loadInput(int *input, int *exp)
       continue;
     char *dir = "trainingPicture/";
     char *conc = my_strcon(dir, actual->d_name);
-    int l = atoi(actual->d_name);
-    exp[i] = l;
+    double l = atoi(actual->d_name);
+    exp[i] = l / 100;
     picture_to_double(IMG_Load(conc), input + (i * _LENI_));
     i++;
   }
@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
   neuron *output = neuron_init(_LENO_, _LENH_);
 
   int *input = malloc(_NB_INPUT_ * _LENI_ * sizeof(int));
-  int *exp = malloc(_NB_INPUT_ * sizeof(int));
+  double *exp = malloc(_NB_INPUT_ * sizeof(double));
 
   loadInput(input, exp);
   FILE *file = NULL;
@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
       {
 	localErr = work(input + j * _LENI_, exp[j], hidden, output);
 	double oe = output->exit;
-	printf("RESULT FOR %d = %f : LocalErr = %f\n", exp[j], oe, localErr);
+	printf("RESULT FOR %f = %f : LocalErr = %f\n", exp[j], oe, localErr);
 	adaptWeight(localErr, input + j * _LENI_, hidden, output);
 	totalErr += localErr;
       }

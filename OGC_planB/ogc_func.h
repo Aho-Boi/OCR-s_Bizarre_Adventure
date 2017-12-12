@@ -2,10 +2,10 @@
 #define _XOR_FUNC_
 
 #define _LENI_ 256
-#define _LENH_ 25
+#define _LENH_ 27
 #define _LENO_ 1
-#define _NB_INPUT_ 3
-#define _NB_TURN_ 8000
+#define _NB_INPUT_ 26
+#define _NB_TURN_ 6000
 
 typedef struct neuron neuron;
 
@@ -19,7 +19,7 @@ struct neuron
 
 int strlenP(const char *str);
 double derivate(double x);
-double work (int *input, int exp, neuron *hidden, neuron *output);
+double work (int *input, double exp, neuron *hidden, neuron *output);
 neuron* neuron_init(int lengthAr, int lengthW);
 void adaptWeight(double e,int *input, neuron *hidden, neuron *output);
 void freadP(char *str, int length, FILE *file);

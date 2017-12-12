@@ -45,5 +45,5 @@ int launchOCR(char* cfile, char* training)
  
   work(input, 36, hidden, output);
   
-  return my_round(output->exit);
+  return my_round(output->exit * 100);
 }

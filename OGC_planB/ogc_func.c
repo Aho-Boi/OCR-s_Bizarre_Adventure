@@ -21,7 +21,7 @@ double derivate(double x)
 
 // update neuron.exit of each neuron of hidden layer and of output 
 // and return error of the patern
-double work (int *input, int exp, neuron *hidden, neuron *output)
+double work (int *input, double exp, neuron *hidden, neuron *output)
 {
   for(int i = 0; i < _LENH_; ++i)
   {
