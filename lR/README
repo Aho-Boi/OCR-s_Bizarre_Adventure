@@ -1,0 +1,9 @@
+Bonjour, voici notre projet ocr.
+
+Nous avons une segmentation fonctionnel, un ocr qui marche, ayant appris une police
+de caractere (majuscule et minuscule) et les lettres klingones. Et pour finir, 
+nous avons une interface gtk.
+Malheureusement, aucun des 3 n'est link. En effet, apres de gros probleme de Makefile,
+nous n'avons pas reussi a link l'interface gtk au reseau de neuronnes.
+
+Au revoir
